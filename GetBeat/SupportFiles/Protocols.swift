@@ -2,7 +2,7 @@
 import Foundation
 
 protocol PickerDelegate {
-    func pickerValueSelected(value: String, buttonTag: Int, valueIndex: Int)
+    func pickerValueSelected(value: String, picker: PickerEnum, valueIndex: Int)
 }
 
 protocol FilterDelegate {

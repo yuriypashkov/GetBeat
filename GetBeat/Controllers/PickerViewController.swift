@@ -9,7 +9,7 @@ class PickerViewController: UIViewController {
     
     var pickerTitle: String?
     var pickerViewData: [String] = []
-    var pickerIdentifier: Int?
+    var pickerIdentifier: PickerEnum?
     
     var delegate: PickerDelegate?
     
@@ -24,11 +24,11 @@ class PickerViewController: UIViewController {
     }
 
     @IBAction func applyButtonTap(_ sender: UIButton) {
-        guard let buttonTag = pickerIdentifier else { return }
+        guard let picker = pickerIdentifier else { return }
         let index = pickerView.selectedRow(inComponent: 0)
         
         // атрибут valueIndex нужен для запроса к бэку, ибо там запрос не по названиям, а по цифровому соответствию
-        delegate?.pickerValueSelected(value: pickerViewData[index], buttonTag: buttonTag, valueIndex: index + 1)
+        delegate?.pickerValueSelected(value: pickerViewData[index], picker: picker, valueIndex: index + 1)
         
         dismiss(animated: true, completion: nil)
     }

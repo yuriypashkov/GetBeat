@@ -20,6 +20,8 @@
 		2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114886A2582BACF0065C0C6 /* PickerViewController.swift */; };
 		2114886E2582CF3C0065C0C6 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114886D2582CF3C0065C0C6 /* Protocols.swift */; };
 		211488712582CF600065C0C6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211488702582CF600065C0C6 /* Extensions.swift */; };
+		2114887525843CA00065C0C6 /* SomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114887425843CA00065C0C6 /* SomeData.swift */; };
+		2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114887925865BC20065C0C6 /* FilterStateModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		2114886A2582BACF0065C0C6 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		2114886D2582CF3C0065C0C6 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		211488702582CF600065C0C6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2114887425843CA00065C0C6 /* SomeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeData.swift; sourceTree = "<group>"; };
+		2114887925865BC20065C0C6 /* FilterStateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStateModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,7 @@
 				21148848257FAB670065C0C6 /* LaunchScreen.storyboard */,
 				2114886D2582CF3C0065C0C6 /* Protocols.swift */,
 				211488702582CF600065C0C6 /* Extensions.swift */,
+				2114887425843CA00065C0C6 /* SomeData.swift */,
 			);
 			path = SupportFiles;
 			sourceTree = "<group>";
@@ -106,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				2114885B257FACB30065C0C6 /* Track.swift */,
+				2114887925865BC20065C0C6 /* FilterStateModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -201,9 +207,11 @@
 				21148868258293520065C0C6 /* FilterViewController.swift in Sources */,
 				21148857257FAC420065C0C6 /* NetworkModel.swift in Sources */,
 				2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */,
+				2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */,
 				2114886E2582CF3C0065C0C6 /* Protocols.swift in Sources */,
 				2114885C257FACB30065C0C6 /* Track.swift in Sources */,
 				211488712582CF600065C0C6 /* Extensions.swift in Sources */,
+				2114887525843CA00065C0C6 /* SomeData.swift in Sources */,
 				21148842257FAB660065C0C6 /* MainViewController.swift in Sources */,
 				2114883E257FAB660065C0C6 /* AppDelegate.swift in Sources */,
 				21148840257FAB660065C0C6 /* SceneDelegate.swift in Sources */,

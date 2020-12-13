@@ -14,6 +14,7 @@ struct Track: Decodable {
     var price: Price?
     var currency: String?
     var realName: String?
+    var free: String?
     
     var authorName: String {
         if let realName = self.realName {

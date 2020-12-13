@@ -24,8 +24,7 @@ class MainViewController: UIViewController, FilterDelegate {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.center = view.center
         view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-
+        
         // load data
         loadData()
     }
@@ -38,7 +37,7 @@ class MainViewController: UIViewController, FilterDelegate {
     
     
     func loadData() {
-        
+        activityIndicator.startAnimating()
 //        let queryItemsForStart = [
 //            URLQueryItem(name: "mobileApp", value: "1"),
 //            URLQueryItem(name: "getCount", value: "20")
@@ -53,6 +52,7 @@ class MainViewController: UIViewController, FilterDelegate {
                     self.activityIndicator.stopAnimating()
                 case .failure:
                     self.tracks = []
+                    self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                 }
             }
@@ -103,13 +103,18 @@ class MainViewController: UIViewController, FilterDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let filterViewController = storyboard.instantiateViewController(withIdentifier: "FilterViewController") as? FilterViewController {
             filterViewController.delegate = self
+            filterViewController.filtersState = filterDictionaryForState
             present(filterViewController, animated: true, completion: nil)
         }
     }
     
+    var filterDictionaryForState: [String: String?] = [:] // словарь удобней модели, ибо из него лучше делается массив queryItems
+    
     func filterValuesSelected(filterDictionary: [String: String?]) {
         // назначаем параметры для массива queryItems и делаем релоад дата с этими параметрами
         queryItems.removeAll()
+        tempIndexRow = nil // чтобы подсветка не оставалась после выставления фильтров
+        filterDictionaryForState = filterDictionary // сохраним полученные значения фильтров, чтобы восстановить их при следующем входе в Фильтры
         
         for filterAttribute in filterDictionary {
             if let attributeValue = filterAttribute.value {
@@ -130,6 +135,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrackCell") as! TrackCell
         cell.setCell(currentTrack: tracks[indexPath.row])
+        //cell.testLabel.text = String(indexPath.row)
         return cell
     }
     
