@@ -18,15 +18,10 @@ class TrackCell: UITableViewCell {
     //var currentTrack: Track?
     
     func setCell(currentTrack: Track) {
-        //print("SET CELL")
-        //trackNameLabel.textColor = .black
-        //authorNameLabel.textColor = .darkGray
-        
         // очень слабый момент парсинга имени автора и названия трека, могут быть косяки
         trackNameLabel.text = currentTrack.trackName
         authorNameLabel.text = currentTrack.authorName
-        //self.currentTrack = currentTrack
-       // if let licenseOne = currentTrack.typeLicense {
+
         if currentTrack.free == "0" {
             cellButton.setImage(UIImage(named: "cart50px"), for: .normal)
         } else {

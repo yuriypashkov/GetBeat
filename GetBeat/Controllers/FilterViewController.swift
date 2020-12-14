@@ -1,13 +1,6 @@
 
 import UIKit
 
-enum PickerEnum: Int {
-    case mood
-    case genre
-    case key
-    case license
-}
-
 class FilterViewController: UIViewController, PickerDelegate {
     
     @IBOutlet weak var tempoView: UIView!
@@ -67,6 +60,18 @@ class FilterViewController: UIViewController, PickerDelegate {
     @IBOutlet weak var bpmCountSwitch: UISwitch!
     @IBOutlet weak var hookSwitch: UISwitch!
     @IBOutlet weak var newFirstSwitch: UISwitch!
+    @IBOutlet weak var paidTracksSwitch: UISwitch!
+    @IBOutlet weak var freeTracksSwitch: UISwitch!
+    
+    @IBAction func freeOrPaidSwitchTap(_ sender: UISwitch) {
+        switch sender.tag {
+        case 0:
+            if paidTracksSwitch.isOn { paidTracksSwitch.isOn = false }
+        case 1:
+            if freeTracksSwitch.isOn { freeTracksSwitch.isOn = false }
+        default: ()
+        }
+    }
     
     
     @IBOutlet weak var bpmCountViewTopConstraint: NSLayoutConstraint!
@@ -184,7 +189,8 @@ class FilterViewController: UIViewController, PickerDelegate {
             "newFirst": "\(newFirstSwitch.isOn)", "hook": "\(hookSwitch.isOn)",
             "energy": "\(Int(energySlider.value))", "temp": "\(Int(tempoSlider.value))",
             "currBpmStatus": "\(bpmCountSwitch.isOn)", "currBpm": bpmCountTextField.text ?? "0",
-            "coast": "\(Int(coastSlider.value))", "typeLicense": licenseValue
+            "coast": "\(Int(coastSlider.value))", "typeLicense": licenseValue,
+            "getFreeStatus": "\(freeTracksSwitch.isOn)", "getPaidStatus": "\(paidTracksSwitch.isOn)"
         ]
 
         delegate?.filterValuesSelected(filterDictionary: filterDictionary)

@@ -8,3 +8,10 @@ protocol PickerDelegate {
 protocol FilterDelegate {
     func filterValuesSelected(filterDictionary: [String: String?])
 }
+
+enum PickerEnum: Int {
+    case mood
+    case genre
+    case key
+    case license
+}

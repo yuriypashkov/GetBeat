@@ -15,6 +15,9 @@ struct FilterStateModel {
         controller.hookSwitch.isOn = false
         controller.bpmCountSwitchTap(controller.bpmCountSwitch)
         controller.bpmCountTextField.text = ""
+        controller.freeTracksSwitch.isOn = false
+        controller.paidTracksSwitch.isOn = false
+        
         // sliders
         controller.coastSlider.value = 0
         controller.tempoSlider.value = 0
@@ -111,6 +114,26 @@ struct FilterStateModel {
             if let number = Int(temp) {
                 controller.arrayOfPickerButtons[3].setTitle(licensePickerViewData[number], for: .normal)
                 controller.licenseValue = temp
+            }
+        }
+        
+        if let temp = controller.filtersState["getFreeStatus", default: "none"] {
+            switch temp {
+            case "true":
+                controller.freeTracksSwitch.isOn = true
+            case "false":
+                controller.freeTracksSwitch.isOn = false
+            default: ()
+            }
+        }
+        
+        if let temp = controller.filtersState["getPaidStatus", default: "none"] {
+            switch temp {
+            case "true":
+                controller.paidTracksSwitch.isOn = true
+            case "false":
+                controller.paidTracksSwitch.isOn = false
+            default: ()
             }
         }
         
