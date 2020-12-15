@@ -2,6 +2,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 extension UITableViewCell {
     
@@ -45,3 +46,30 @@ extension UITextField {
     @objc func cancelButtonTapped() { self.resignFirstResponder() }
 }
 
+extension Float {
+    
+    func floatToTime() -> String {
+        let minutes = self / 60
+        let seconds = Int(self.rounded()) % 60
+        if seconds < 10 {
+            return "\(Int(minutes.rounded(.down))):0\(seconds)"
+        } else {
+            return "\(Int(minutes.rounded(.down))):\(seconds)"
+        }
+    }
+    
+}
+
+extension AVPlayer {
+    
+    func addProgressObserver(action: @escaping ((Double) -> Void)) -> Any {
+        return self.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: .main, using: { time in
+            if let duration = self.currentItem?.duration {
+                let duration = CMTimeGetSeconds(duration), time = CMTimeGetSeconds(time)
+                let progress = (time/duration)
+                action(progress)
+            }
+        })
+    }
+    
+}

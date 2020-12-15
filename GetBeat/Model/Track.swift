@@ -1,5 +1,6 @@
 
 import Foundation
+import AVFoundation
 
 struct Track: Decodable {
     
@@ -50,6 +51,34 @@ struct Track: Decodable {
         } else {
             return nil
         }
+    }
+    
+    var durationInString: String? {
+        if let previewUrl = previewUrl {
+            guard let url = URL(string: previewUrl) else { return nil }
+            let asset = AVURLAsset(url: url, options: nil)
+            let audioDuration = asset.duration
+            let audioDurationSeconds = CMTimeGetSeconds(audioDuration)
+            let minutes = audioDurationSeconds / 60
+            let seconds = Int(audioDurationSeconds.rounded()) % 60
+            if seconds < 10 {
+                return "\(Int(minutes.rounded(.down))):0\(seconds)"
+            } else {
+                return "\(Int(minutes.rounded(.down))):\(seconds)"
+            }
+        }
+        return nil
+    }
+    
+    var durationInSeconds: Double? {
+        if let previewUrl = previewUrl {
+            guard let url = URL(string: previewUrl) else { return nil }
+            let asset = AVURLAsset(url: url, options: nil)
+            let audioDuration = asset.duration
+            let audioDurationSeconds = CMTimeGetSeconds(audioDuration)
+            return audioDurationSeconds
+        }
+        return nil
     }
     
 }

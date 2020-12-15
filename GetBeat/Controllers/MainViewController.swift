@@ -13,8 +13,9 @@ class MainViewController: UIViewController, FilterDelegate {
     let activityIndicator = UIActivityIndicatorView()
     
     //background play music
-    var player: AVPlayer?
+    let player = AVPlayer()
     var playerItem: AVPlayerItem?
+    private var playingTrackObserver: Any?
     
     //array for query items
     var queryItems: [URLQueryItem] = []
@@ -23,6 +24,7 @@ class MainViewController: UIViewController, FilterDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // playingView
         playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 90), width: view.frame.size.width, height: 180)
         view.addSubview(playingView)
@@ -42,12 +44,32 @@ class MainViewController: UIViewController, FilterDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        if let ob = self.playingTrackObserver {
+            player.removeTimeObserver(ob)
+            playingTrackObserver = nil
+        }
+        
+        player.pause()
+        playingView.alpha = 0
+        playingView.setViewOnDefault()
+        
+        NotificationCenter.default.removeObserver(self)
     }
     
     func preloadMusicData(urlString: String) {
         let url = URL(string: urlString)
         let playerItem = AVPlayerItem(url: url!)
-        player = AVPlayer(playerItem: playerItem)
+        player.replaceCurrentItem(with: playerItem)
+    }
+    
+    @objc func didFinishPlayTrack(sender: Notification) {
+        playingView.setViewOnDefault()
     }
     
     func worksWithArray() {
@@ -114,8 +136,8 @@ class MainViewController: UIViewController, FilterDelegate {
                     
                     self.worksWithArray()
                     
-                    if let tempIndexRow = self.tempIndexRow {
-                        self.tableView.selectRow(at: IndexPath(row: tempIndexRow, section: 1), animated: true, scrollPosition: .none)
+                    if let tempIndexPath = self.tempIndexPath {
+                        self.tableView.selectRow(at: tempIndexPath, animated: true, scrollPosition: .none)
                     }
                     
                     self.tracksCount += 10
@@ -128,7 +150,8 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     // костыль для остановки текущего трека и воспроизведения следующего одним тапом
-    var tempIndexRow: Int?
+   // var tempIndexRow: Int?
+    var tempIndexPath: IndexPath?
     
     // MARK: Filtering
     
@@ -146,7 +169,8 @@ class MainViewController: UIViewController, FilterDelegate {
     func filterValuesSelected(filterDictionary: [String: String?]) {
         // назначаем параметры для массива queryItems и делаем релоад дата с этими параметрами
         queryItems.removeAll()
-        tempIndexRow = nil // чтобы подсветка не оставалась после выставления фильтров
+        //tempIndexRow = nil
+        tempIndexPath = nil // чтобы подсветка не оставалась после выставления фильтров
         filterDictionaryForState = filterDictionary // сохраним полученные значения фильтров, чтобы восстановить их при следующем входе в Фильтры
         
         for filterAttribute in filterDictionary {
@@ -164,6 +188,8 @@ class MainViewController: UIViewController, FilterDelegate {
             navigationController?.pushViewController(searchViewController, animated: true)
         }
     }
+    
+    
     
 }
 
@@ -204,34 +230,53 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.setCell(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
         return cell
     }
-    
-    
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // play music
-        if indexPath.row == tempIndexRow {
+        if tempIndexPath == indexPath {
             // если нажал на ту же самую ячейку
-            if player?.timeControlStatus == .playing {
-                player?.pause()
+            if player.timeControlStatus == .playing {
+                player.pause()
                 playingView.playPauseButton.setImage(UIImage(named: "play60px"), for: .normal)
             } else {
-                player?.play()
+                playingView.alpha = 1
+                player.play()
                 playingView.playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
             }
             
         } else {
+            //NotificationCenter.default.removeObserver(self)
+            
+            if let ob = self.playingTrackObserver {
+                player.removeTimeObserver(ob)
+                playingTrackObserver = nil
+            }
+            
             // если нажал на новую ячейку
-            preloadMusicData(urlString: tracks[indexPath.row].previewUrl ?? "None")
+            preloadMusicData(urlString: allTracksInTable[indexPath.section][indexPath.row].previewUrl ?? "None")
             
             //show playing view
             playingView.player = player
             playingView.playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
-            playingView.authorNameLabel.text = tracks[indexPath.row].authorName
-            playingView.trackNameLabel.text = tracks[indexPath.row].trackName
+            playingView.authorNameLabel.text = allTracksInTable[indexPath.section][indexPath.row].authorName
+            playingView.trackNameLabel.text = allTracksInTable[indexPath.section][indexPath.row].trackName
+            playingView.endTimeValueLabel.text = allTracksInTable[indexPath.section][indexPath.row].durationInString
+            playingView.beginTimeValueLabel.text = "0:00"
+            
+            if let durationInSeconds = allTracksInTable[indexPath.section][indexPath.row].durationInSeconds {
+                playingView.durationSlider.maximumValue = Float(durationInSeconds)
+                playingView.durationSlider.value = 0
+                
+                playingTrackObserver = player.addProgressObserver(action: { (progress) in
+                    self.playingView.durationSlider.value = Float(progress * durationInSeconds)
+                    self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
+                })
+                
+            }
             playingView.alpha = 1
             
-            player?.play()
-            tempIndexRow = indexPath.row
+            player.play()
+            tempIndexPath = indexPath
         }
         
     }
