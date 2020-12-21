@@ -63,8 +63,8 @@ extension Float {
 extension AVPlayer {
     
     func addProgressObserver(action: @escaping ((Double) -> Void)) -> Any {
-        return self.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: .main, using: { time in
-            if let duration = self.currentItem?.duration {
+        return self.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: .main, using: { [weak self] time in
+            if let duration = self?.currentItem?.duration {
                 let duration = CMTimeGetSeconds(duration), time = CMTimeGetSeconds(time)
                 let progress = (time/duration)
                 action(progress)

@@ -18,6 +18,7 @@ class SearchViewController: UIViewController {
     private var playingTrackObserver: Any?
     
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = false
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
@@ -121,6 +122,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
             }
             
         } else {
+            guard let durationInSeconds = filteredTracks[indexPath.row].durationInSeconds, !durationInSeconds.isNaN else {
+                return
+            }
             
             if let ob = self.playingTrackObserver {
                 player.removeTimeObserver(ob)
@@ -138,7 +142,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
             playingView.endTimeValueLabel.text = filteredTracks[indexPath.row].durationInString
             playingView.beginTimeValueLabel.text = "0:00"
             
-            if let durationInSeconds = filteredTracks[indexPath.row].durationInSeconds {
+            //if let durationInSeconds = filteredTracks[indexPath.row].durationInSeconds {
                 playingView.durationSlider.maximumValue = Float(durationInSeconds)
                 playingView.durationSlider.value = 0
                 
@@ -147,7 +151,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
                     self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
                 })
                 
-            }
+            //}
             playingView.alpha = 1
             
             player.play()
