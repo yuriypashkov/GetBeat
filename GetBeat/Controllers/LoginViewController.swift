@@ -17,11 +17,19 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var vkLabel: UILabel!
+    @IBOutlet weak var vkButton: UIButton!
     
     // MARK: IBOutlets Actions
+    @IBAction func vkButtonTap(_ sender: UIButton) {
+        
+    }
+    
     
     @IBAction func logoutButtonTap(_ sender: UIButton) {
         // прячем ненужные элементы и показываем нужные
+        vkLabel.alpha = 1
+        vkButton.alpha = 1
         usernameTextField.alpha = 1
         passwordTextField.alpha = 1
         loginButton.alpha = 1
@@ -75,15 +83,18 @@ class LoginViewController: UIViewController {
         view.endEditing(true)
     }
     
+    // метод - прятать элементы на время загрузки
     func setupElements(state: Bool) {
-        loginButton.isEnabled = state
-        passwordTextField.isEnabled = state
-        usernameTextField.isEnabled = state
+        loginButton.isHidden = state
+        passwordTextField.isHidden = state
+        usernameTextField.isHidden = state
+        vkLabel.isHidden = state
+        vkButton.isHidden = state
     }
     
     func loginAttemption(username: String, password: String) {
         activityIndicator.startAnimating()
-        setupElements(state: false)
+        setupElements(state: true)
         passwordTextField.text = password
         usernameTextField.text = username
 
@@ -104,7 +115,7 @@ class LoginViewController: UIViewController {
                         self.errorLabel.text = "Произошла ошибка"
                     }
                     self.activityIndicator.stopAnimating()
-                    self.setupElements(state: true)
+                    self.setupElements(state: false)
                 }
             }
     }
@@ -112,6 +123,8 @@ class LoginViewController: UIViewController {
     func setupAfterLogin(state: Bool, user: User, username: String, password: String) {
         if state {
             // прячем ненужные элементы и показываем нужные
+            vkLabel.alpha = 0
+            vkButton.alpha = 0
             usernameTextField.alpha = 0
             passwordTextField.alpha = 0
             loginButton.alpha = 0

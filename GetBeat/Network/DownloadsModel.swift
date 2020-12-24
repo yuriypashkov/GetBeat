@@ -30,6 +30,20 @@ class DownloadsModel {
         }
     }
     
+    func prepareDownload(filename: String) -> URL? {
+        do {
+                let documentURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                let savedFileURL = documentURL.appendingPathComponent(filename + ".mp3")
+                if FileManager().fileExists(atPath: savedFileURL.path) {
+                    return savedFileURL
+                } else {
+                    return nil
+                }
+            } catch {
+                print(error)
+            }
+        return nil
+    }
     
     
 }

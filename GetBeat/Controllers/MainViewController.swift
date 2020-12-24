@@ -4,6 +4,8 @@ import AVFoundation
 
 class MainViewController: UIViewController, FilterDelegate {
     
+    @IBOutlet weak var reloadButton: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var allTracksInTable: [[Track]] = [[]]
     var hotTracks: [Track] = []
@@ -89,6 +91,11 @@ class MainViewController: UIViewController, FilterDelegate {
         playingView.setViewOnDefault()
     }
     
+    func setAlphaOnError(_ value: CGFloat) {
+        errorLabel.alpha = value
+        reloadButton.alpha = value
+    }
+    
     func reloadDataInAllTracksArray() {
         allTracksInTable.removeAll()
         allTracksInTable.append(hotTracks)
@@ -105,8 +112,10 @@ class MainViewController: UIViewController, FilterDelegate {
                     case .success(let array):
                         self.hotTracks = array
                         self.reloadDataInAllTracksArray()
+                        self.setAlphaOnError(0)
                     case .failure:
                         self.hotTracks = []
+                        self.setAlphaOnError(1)
                 }
                 self.indicatorCount -= 1
             }
@@ -202,6 +211,12 @@ class MainViewController: UIViewController, FilterDelegate {
         if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
             navigationController?.pushViewController(searchViewController, animated: true)
         }
+    }
+    
+    // MARK: - Reload Data
+    @IBAction func reloadDataTap(_ sender: UIButton) {
+        loadHotTracks()
+        loadData()
     }
     
     
