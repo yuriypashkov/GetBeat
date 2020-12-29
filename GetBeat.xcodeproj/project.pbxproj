@@ -27,6 +27,8 @@
 		211C998A258A6A6E00962948 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C9989258A6A6E00962948 /* User.swift */; };
 		21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21559A8E258BD48F00D18115 /* LoginViewController.swift */; };
 		2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */; };
+		2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A5532597557A000AC98E /* VKLoginClient.swift */; };
+		2172A55C259AA70C000AC98E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A55B259AA70C000AC98E /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		211C9989258A6A6E00962948 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		21559A8E258BD48F00D18115 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsModel.swift; sourceTree = "<group>"; };
+		2172A5532597557A000AC98E /* VKLoginClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginClient.swift; sourceTree = "<group>"; };
+		2172A55B259AA70C000AC98E /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 			children = (
 				21148856257FAC420065C0C6 /* NetworkModel.swift */,
 				2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */,
+				2172A5532597557A000AC98E /* VKLoginClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -145,6 +150,7 @@
 				2114886A2582BACF0065C0C6 /* PickerViewController.swift */,
 				211C997F2587C55800962948 /* SearchViewController.swift */,
 				21559A8E258BD48F00D18115 /* LoginViewController.swift */,
+				2172A55B259AA70C000AC98E /* SettingsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -224,6 +230,7 @@
 				2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */,
 				211C99862588127200962948 /* PlayingView.swift in Sources */,
 				2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */,
+				2172A55C259AA70C000AC98E /* SettingsViewController.swift in Sources */,
 				2114886E2582CF3C0065C0C6 /* Protocols.swift in Sources */,
 				2114885C257FACB30065C0C6 /* Track.swift in Sources */,
 				211488712582CF600065C0C6 /* Extensions.swift in Sources */,
@@ -232,6 +239,7 @@
 				211C99802587C55800962948 /* SearchViewController.swift in Sources */,
 				2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */,
 				21148842257FAB660065C0C6 /* MainViewController.swift in Sources */,
+				2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */,
 				21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */,
 				2114883E257FAB660065C0C6 /* AppDelegate.swift in Sources */,
 				21148840257FAB660065C0C6 /* SceneDelegate.swift in Sources */,

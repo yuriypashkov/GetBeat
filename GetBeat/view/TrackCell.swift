@@ -10,12 +10,8 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     let trackLayer = CAShapeLayer()
     var currentDownloadedFileName: String?
     var track: Track?
-    //let downloadsModel = DownloadsModel()
     private lazy var session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-//    lazy var webView: WKWebView = {
-//            let web = WKWebView.init(frame: UIScreen.main.bounds)
-//            return web
-//        }()
+
     
     // MARK: IB Outlets
     @IBOutlet weak var trackNameLabel: UILabel!
@@ -30,14 +26,6 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
             guard let url = URL(string: "https://getbeat.ru/order") else { return }
             let svc = SFSafariViewController(url: url)
             window?.rootViewController?.present(svc, animated: true, completion: nil)
-            //UIApplication.shared.open(url)
-//            let urlString = "https://getbeat.ru/lib/loginByEmail.php"
-//            let controller = UIViewController()
-//            var request = URLRequest(url: URL(string: urlString)!)
-//            request.httpMethod = "POST"
-//            webView.load(request)
-//            controller.view.addSubview(self.webView)
-//            window?.rootViewController?.present(controller, animated: true, completion: nil)
         } else {
             if let urlString = track?.previewUrl, let filename = track?.realName {
                 currentDownloadedFileName = filename
@@ -125,6 +113,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
                 self.cellButton.alpha = 1
                 self.shapeLayer.removeFromSuperlayer()
                 self.trackLayer.removeFromSuperlayer()
+                self.shapeLayer.strokeEnd = 0
             }
         } catch {
             print(error)

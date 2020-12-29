@@ -1,12 +1,15 @@
 
 import UIKit
+import WebKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, VKLoginProtocol {
 
     // MARK: Attributes
     let networkModel = NetworkModel()
     let activityIndicator = UIActivityIndicatorView()
     let defaults = UserDefaults.standard
+    let vkLoginClient = VKLoginClient()
+    //var currentUser: User?
     
     // MARK: IBOutlets
     
@@ -19,14 +22,21 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var logoutButton: UIButton!
     @IBOutlet weak var vkLabel: UILabel!
     @IBOutlet weak var vkButton: UIButton!
+    @IBOutlet weak var photoImageView: UIImageView!
     
     // MARK: IBOutlets Actions
     @IBAction func vkButtonTap(_ sender: UIButton) {
-        
+        //vkLoginClient.testQueues()
+        vkLoginClient.showPermissions()
+        //let controller = vkLoginClient.showPermissions()
+        //present(controller, animated: true, completion: nil)
+        // можно попробовать релизовать нормально модель: здесь делать видимой вторую кнопку с надписью Войти и уже по тапу на нее вызывать метод из модели, который вернет JSON от гетбит
     }
     
     
     @IBAction func logoutButtonTap(_ sender: UIButton) {
+        // разобраться с setupElements
+        setupElements(state: false)
         // прячем ненужные элементы и показываем нужные
         vkLabel.alpha = 1
         vkButton.alpha = 1
@@ -35,6 +45,7 @@ class LoginViewController: UIViewController {
         loginButton.alpha = 1
         logoutButton.alpha = 0
         welcomeLabel.alpha = 0
+        photoImageView.alpha = 0
         // удаляем логин и пароль
         defaults.removeObject(forKey: "username")
         defaults.removeObject(forKey: "password")
@@ -56,6 +67,8 @@ class LoginViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        vkLoginClient.delegate = self
+        
         // закрытие клавиатуры по тапу на вьюхе
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapOnView))
         view.isUserInteractionEnabled = true
@@ -75,6 +88,10 @@ class LoginViewController: UIViewController {
             loginAttemption(username: username, password: password)
        }
         
+        // image view rounded
+        photoImageView.layer.cornerRadius = photoImageView.frame.width / 2
+        //photoImageView.layer.masksToBounds = true
+        
     }
     
     
@@ -90,6 +107,7 @@ class LoginViewController: UIViewController {
         usernameTextField.isHidden = state
         vkLabel.isHidden = state
         vkButton.isHidden = state
+        //photoImageView.isHidden = state
     }
     
     func loginAttemption(username: String, password: String) {
@@ -108,7 +126,7 @@ class LoginViewController: UIViewController {
                     switch result {
                     case .success(let user):
                         if let login = user.login {
-                            self.setupAfterLogin(state: login, user: user, username: username, password: password)
+                            self.setupAfterLogin(state: login, user: user, username: username, password: password, isEmailLogin: true)
                         }
                     case .failure:
                         self.errorLabel.alpha = 1
@@ -120,8 +138,9 @@ class LoginViewController: UIViewController {
             }
     }
     
-    func setupAfterLogin(state: Bool, user: User, username: String, password: String) {
+    func setupAfterLogin(state: Bool, user: User, username: String, password: String, isEmailLogin: Bool) {
         if state {
+            //setupElements(state: false)
             // прячем ненужные элементы и показываем нужные
             vkLabel.alpha = 0
             vkButton.alpha = 0
@@ -130,11 +149,22 @@ class LoginViewController: UIViewController {
             loginButton.alpha = 0
             logoutButton.alpha = 1
             welcomeLabel.alpha = 1
-            if let nickname = user.nickname {
-                welcomeLabel.text = "Добро пожаловать, \(nickname)"
+            
+            // в зависимости от типа логина - разные поля заполняются
+            if isEmailLogin {
+                if let nickname = user.nickname {
+                    welcomeLabel.text = "Добро пожаловать, \(nickname)"
+                }
+                defaults.setValue(username, forKey: "username")
+                defaults.setValue(password, forKey: "password")
+            } else {
+                if let firstname = user.firstName, let lastname = user.lastName, let photoRecUrl = user.photoRec {
+                    welcomeLabel.text = "Добро пожаловать, \(firstname) \(lastname)"
+                    //photoImageView.image = UIImage(named: "vkIcon200px")
+                    photoImageView.alpha = 1
+                    photoImageView.lazyDownloadImage(link: photoRecUrl)
+                }
             }
-            defaults.setValue(username, forKey: "username")
-            defaults.setValue(password, forKey: "password")
         } else {
             errorLabel.alpha = 1
             errorLabel.text = "Неверный логин или пароль"
