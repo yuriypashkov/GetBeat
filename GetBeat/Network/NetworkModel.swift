@@ -9,6 +9,7 @@ import Foundation
 
 enum NetworkError: Error {
     case noData
+    case badResponse
 }
 
 class NetworkModel {
@@ -23,6 +24,8 @@ class NetworkModel {
         components.queryItems = queryItems
         let query = components.url!.query
         urlRequest.httpBody = Data(query!.utf8)
+        
+        urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type") // метод кодирования значений в запросе
         
         let dataTask = session.dataTask(with: urlRequest) { (data, response, error) in
             
@@ -86,6 +89,50 @@ class NetworkModel {
             }
         }
         
+        dataTask.resume()
+    }
+    
+    func login(queryData: [String: String], onResult: @escaping (Result<User, Error>) -> Void) {
+        let session = URLSession.shared
+        let url = URL(string: "https://getbeat.ru/lib/loginByEmail.php")!
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        
+        var queryItems: [URLQueryItem] = []
+        for (key, value) in queryData {
+            let queryItem = URLQueryItem(name: key, value: value)
+            queryItems.append(queryItem)
+        }
+        
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        components.queryItems = queryItems
+        let query = components.url!.query
+        urlRequest.httpBody = Data(query!.utf8)
+        
+        urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = session.dataTask(with: urlRequest) { (data, response, error) in
+            
+            guard let data = data else {
+                onResult(.failure(NetworkError.noData))
+                return
+            }
+            
+            guard let _ = response as? HTTPURLResponse else {
+                onResult(.failure(NetworkError.badResponse))
+                return
+            }
+            //print(response.statusCode)
+            
+            do {
+                let user = try JSONDecoder().decode(User.self, from: data)
+                onResult(.success(user))
+            }
+            catch (let error) {
+                onResult(.failure(error))
+            }
+ 
+        }
         dataTask.resume()
     }
     

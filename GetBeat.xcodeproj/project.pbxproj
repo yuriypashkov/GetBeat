@@ -24,6 +24,11 @@
 		2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114887925865BC20065C0C6 /* FilterStateModel.swift */; };
 		211C99802587C55800962948 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C997F2587C55800962948 /* SearchViewController.swift */; };
 		211C99862588127200962948 /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C99852588127200962948 /* PlayingView.swift */; };
+		211C998A258A6A6E00962948 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C9989258A6A6E00962948 /* User.swift */; };
+		21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21559A8E258BD48F00D18115 /* LoginViewController.swift */; };
+		2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */; };
+		2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A5532597557A000AC98E /* VKLoginClient.swift */; };
+		2172A55C259AA70C000AC98E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A55B259AA70C000AC98E /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +51,11 @@
 		2114887925865BC20065C0C6 /* FilterStateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStateModel.swift; sourceTree = "<group>"; };
 		211C997F2587C55800962948 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		211C99852588127200962948 /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
+		211C9989258A6A6E00962948 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		21559A8E258BD48F00D18115 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsModel.swift; sourceTree = "<group>"; };
+		2172A5532597557A000AC98E /* VKLoginClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginClient.swift; sourceTree = "<group>"; };
+		2172A55B259AA70C000AC98E /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +117,8 @@
 			isa = PBXGroup;
 			children = (
 				21148856257FAC420065C0C6 /* NetworkModel.swift */,
+				2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */,
+				2172A5532597557A000AC98E /* VKLoginClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -116,6 +128,7 @@
 			children = (
 				2114885B257FACB30065C0C6 /* Track.swift */,
 				2114887925865BC20065C0C6 /* FilterStateModel.swift */,
+				211C9989258A6A6E00962948 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -136,6 +149,8 @@
 				21148867258293520065C0C6 /* FilterViewController.swift */,
 				2114886A2582BACF0065C0C6 /* PickerViewController.swift */,
 				211C997F2587C55800962948 /* SearchViewController.swift */,
+				21559A8E258BD48F00D18115 /* LoginViewController.swift */,
+				2172A55B259AA70C000AC98E /* SettingsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -215,12 +230,17 @@
 				2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */,
 				211C99862588127200962948 /* PlayingView.swift in Sources */,
 				2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */,
+				2172A55C259AA70C000AC98E /* SettingsViewController.swift in Sources */,
 				2114886E2582CF3C0065C0C6 /* Protocols.swift in Sources */,
 				2114885C257FACB30065C0C6 /* Track.swift in Sources */,
 				211488712582CF600065C0C6 /* Extensions.swift in Sources */,
+				211C998A258A6A6E00962948 /* User.swift in Sources */,
 				2114887525843CA00065C0C6 /* SomeData.swift in Sources */,
 				211C99802587C55800962948 /* SearchViewController.swift in Sources */,
+				2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */,
 				21148842257FAB660065C0C6 /* MainViewController.swift in Sources */,
+				2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */,
+				21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */,
 				2114883E257FAB660065C0C6 /* AppDelegate.swift in Sources */,
 				21148840257FAB660065C0C6 /* SceneDelegate.swift in Sources */,
 				21148863257FFA8A0065C0C6 /* TrackCell.swift in Sources */,
@@ -370,6 +390,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GetBeat/GetBeat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4524FJSV52;
 				INFOPLIST_FILE = GetBeat/Info.plist;
@@ -390,6 +411,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GetBeat/GetBeat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4524FJSV52;
 				INFOPLIST_FILE = GetBeat/Info.plist;

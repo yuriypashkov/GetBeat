@@ -4,6 +4,8 @@ import AVFoundation
 
 class MainViewController: UIViewController, FilterDelegate {
     
+    @IBOutlet weak var reloadButton: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var allTracksInTable: [[Track]] = [[]]
     var hotTracks: [Track] = []
@@ -16,19 +18,35 @@ class MainViewController: UIViewController, FilterDelegate {
     let player = AVPlayer()
     var playerItem: AVPlayerItem?
     private var playingTrackObserver: Any?
+    private var loadingTrackObserver: Any?
     
     //array for query items
     var queryItems: [URLQueryItem] = []
     
     var playingView: PlayingView!
     
+    // 2 запроса к бэку при старте приложения, поэтому такой выход для правильного выключения индикатора загрузки
+    var indicatorCount = 0 {
+        didSet {
+            if indicatorCount > 0 {
+                activityIndicator.startAnimating()
+                tableView.isUserInteractionEnabled = false
+            } else {
+                activityIndicator.stopAnimating()
+                tableView.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // playingView
-        playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 90), width: view.frame.size.width, height: 180)
-        view.addSubview(playingView)
-        playingView.alpha = 0
+        
+        if let tabBarHeight = tabBarController?.tabBar.frame.size.height {
+            // playingView
+            playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 75 - tabBarHeight), width: view.frame.size.width, height: 180)
+            view.addSubview(playingView)
+            playingView.alpha = 0
+        } 
         
         // set indicator view
         activityIndicator.hidesWhenStopped = true
@@ -43,6 +61,7 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
@@ -72,44 +91,52 @@ class MainViewController: UIViewController, FilterDelegate {
         playingView.setViewOnDefault()
     }
     
-    func worksWithArray() {
+    func setAlphaOnError(_ value: CGFloat) {
+        errorLabel.alpha = value
+        reloadButton.alpha = value
+    }
+    
+    func reloadDataInAllTracksArray() {
         allTracksInTable.removeAll()
         allTracksInTable.append(hotTracks)
         allTracksInTable.append(tracks)
-        activityIndicator.stopAnimating()
         tableView.reloadData()
     }
     
     func loadHotTracks() {
-        activityIndicator.startAnimating()
+        indicatorCount += 1
+        
         networkModel.getHotTracks { (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let array):
-                    self.hotTracks = array
-                    self.worksWithArray()
-                case .failure:
-                    self.hotTracks = []
-                    self.activityIndicator.stopAnimating()
+                    case .success(let array):
+                        self.hotTracks = array
+                        self.reloadDataInAllTracksArray()
+                        self.setAlphaOnError(0)
+                    case .failure:
+                        self.hotTracks = []
+                        self.setAlphaOnError(1)
+                }
+                self.indicatorCount -= 1
             }
         }
-    }
     }
     
     
     func loadData() {
-        activityIndicator.startAnimating()
+        indicatorCount += 1
         
         networkModel.getTracks(queryItems: queryItems) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let tempArray):
                     self.tracks = tempArray
-                    self.worksWithArray()
+                    self.reloadDataInAllTracksArray()
                 case .failure:
                     self.tracks = []
-                    self.worksWithArray()
+                    self.reloadDataInAllTracksArray()
                 }
+                self.indicatorCount -= 1
             }
         }
     }
@@ -118,8 +145,7 @@ class MainViewController: UIViewController, FilterDelegate {
     var tracksCount = 0
     
     func lazyLoadData() {
-        
-        activityIndicator.startAnimating()
+        indicatorCount += 1
         
         let currentCount = tracksCount + 10
         // собираем массив параметров запроса. Добавляем к текущим параметрам фильтра прокрутку на 10 позиций каждый раз
@@ -133,16 +159,16 @@ class MainViewController: UIViewController, FilterDelegate {
                 switch result {
                 case .success(let tempArray):
                     self.tracks.append(contentsOf: tempArray)
-                    
-                    self.worksWithArray()
-                    
+                    self.reloadDataInAllTracksArray()
+        
                     if let tempIndexPath = self.tempIndexPath {
                         self.tableView.selectRow(at: tempIndexPath, animated: true, scrollPosition: .none)
                     }
                     
                     self.tracksCount += 10
+                    self.indicatorCount -= 1
                 case .failure:
-                    self.activityIndicator.stopAnimating()
+                    self.indicatorCount -= 1
                 }
             }
         }
@@ -150,7 +176,6 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     // костыль для остановки текущего трека и воспроизведения следующего одним тапом
-   // var tempIndexRow: Int?
     var tempIndexPath: IndexPath?
     
     // MARK: Filtering
@@ -169,7 +194,6 @@ class MainViewController: UIViewController, FilterDelegate {
     func filterValuesSelected(filterDictionary: [String: String?]) {
         // назначаем параметры для массива queryItems и делаем релоад дата с этими параметрами
         queryItems.removeAll()
-        //tempIndexRow = nil
         tempIndexPath = nil // чтобы подсветка не оставалась после выставления фильтров
         filterDictionaryForState = filterDictionary // сохраним полученные значения фильтров, чтобы восстановить их при следующем входе в Фильтры
         
@@ -187,6 +211,12 @@ class MainViewController: UIViewController, FilterDelegate {
         if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
             navigationController?.pushViewController(searchViewController, animated: true)
         }
+    }
+    
+    // MARK: - Reload Data
+    @IBAction func reloadDataTap(_ sender: UIButton) {
+        loadHotTracks()
+        loadData()
     }
     
     
@@ -245,16 +275,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
         } else {
-            //NotificationCenter.default.removeObserver(self)
-            
-            if let ob = self.playingTrackObserver {
-                player.removeTimeObserver(ob)
-                playingTrackObserver = nil
+            guard let durationInSeconds = allTracksInTable[indexPath.section][indexPath.row].durationInSeconds, !durationInSeconds.isNaN else {
+                print("NaN ins seconds")
+                return
             }
-            
+
             // если нажал на новую ячейку
             preloadMusicData(urlString: allTracksInTable[indexPath.section][indexPath.row].previewUrl ?? "None")
-            
             //show playing view
             playingView.player = player
             playingView.playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
@@ -263,16 +290,38 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             playingView.endTimeValueLabel.text = allTracksInTable[indexPath.section][indexPath.row].durationInString
             playingView.beginTimeValueLabel.text = "0:00"
             
-            if let durationInSeconds = allTracksInTable[indexPath.section][indexPath.row].durationInSeconds {
-                playingView.durationSlider.maximumValue = Float(durationInSeconds)
-                playingView.durationSlider.value = 0
-                
-                playingTrackObserver = player.addProgressObserver(action: { (progress) in
-                    self.playingView.durationSlider.value = Float(progress * durationInSeconds)
-                    self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
-                })
-                
+            // наблюдатель для загрузки трека, работает только при прокрутке грузящегося трека
+//            if let lto = loadingTrackObserver {
+//                player.removeTimeObserver(lto)
+//                loadingTrackObserver = nil
+//            }
+//            
+//            loadingTrackObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 10), queue: DispatchQueue.main, using: { [weak self] time in
+//                if self?.player.currentItem?.status == .readyToPlay {
+//                    if let isPlaybackLikelyToKeepUp = self?.player.currentItem?.isPlaybackLikelyToKeepUp {
+//                        if !isPlaybackLikelyToKeepUp {
+//                            self?.activityIndicator.startAnimating()
+//                        } else {
+//                            self?.activityIndicator.stopAnimating()
+//                        }
+//                    }
+//                }
+//            })
+            
+            // наблюдатель для работы со слайдером
+            if let pto = playingTrackObserver {
+                player.removeTimeObserver(pto)
+                playingTrackObserver = nil
             }
+            
+            playingTrackObserver = player.addProgressObserver(action: { (progress) in
+                self.playingView.durationSlider.value = Float(progress * durationInSeconds)
+                self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
+            })
+            
+            playingView.durationSlider.maximumValue = Float(durationInSeconds) // на медленном соединении здесь значение NaN
+            playingView.durationSlider.value = 0
+            
             playingView.alpha = 1
             
             player.play()
