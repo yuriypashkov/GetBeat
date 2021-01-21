@@ -8,6 +8,11 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -22,23 +27,23 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TrackCell" id="S7w-LG-Mh1" customClass="TrackCell" customModule="GetBeat" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="414" height="59"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S7w-LG-Mh1" id="EqK-kp-mhx">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="59"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="c1r-M9-Lpf" userLabel="LabelsStackView">
-                                                    <rect key="frame" x="16" y="8" width="334" height="43"/>
+                                                    <rect key="frame" x="16" y="8" width="334" height="44"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TrackName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9hI-vX-6M7">
-                                                            <rect key="frame" x="0.0" y="0.0" width="334" height="19.5"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="334" height="20"/>
+                                                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obJ-1y-9dS" userLabel="AuthorLabel">
-                                                            <rect key="frame" x="0.0" y="23.5" width="334" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="24" width="334" height="20"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -46,7 +51,7 @@
                                                     </subviews>
                                                 </stackView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FI7-KL-8Az">
-                                                    <rect key="frame" x="366" y="9.5" width="40" height="40"/>
+                                                    <rect key="frame" x="366" y="10" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="Pzf-rP-9fd"/>
                                                         <constraint firstAttribute="height" constant="40" id="Rim-h6-IKl"/>
@@ -708,13 +713,13 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="5" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ie-k4-k5h" userLabel="EnergySlider">
-                                                                <rect key="frame" x="8" y="0.0" width="292" height="31"/>
+                                                                <rect key="frame" x="8" y="0.0" width="300" height="31"/>
                                                                 <connections>
                                                                     <action selector="energySliderValueChanged:" destination="jPm-DK-ypi" eventType="valueChanged" id="YQa-99-i2P"/>
                                                                 </connections>
                                                             </slider>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Энергично" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7pK-4d-VPf">
-                                                                <rect key="frame" x="308" y="0.0" width="74" height="30"/>
+                                                                <rect key="frame" x="316" y="0.0" width="66" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>

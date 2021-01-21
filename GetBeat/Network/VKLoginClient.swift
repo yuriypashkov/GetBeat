@@ -53,8 +53,6 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
         let tempView = UIView(frame: UIScreen.main.bounds)
         tempView.backgroundColor = .white
         controller.view.addSubview(tempView)
-        
-        
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -146,7 +144,7 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
                     guard let data = data else {return}
                     do {
                         let getBeatResponse = try JSONDecoder().decode(User.self, from: data)
-                        // надо передать goBeatResponse в LoginViewController
+                        // надо передать getBeatResponse в LoginViewController
                         //print(getBeatResponse)
                         //print("VKID = \(getBeatResponse.vkid), firstname = \(getBeatResponse.firstName)")
                         self.delegate?.setupAfterLogin(state: true, user: getBeatResponse, username: "nil", password: "nil", isEmailLogin: false)
