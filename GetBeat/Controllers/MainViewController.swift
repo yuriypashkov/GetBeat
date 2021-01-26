@@ -12,7 +12,8 @@ class MainViewController: UIViewController, FilterDelegate {
     var tracks: [Track] = []
     var networkModel = NetworkModel()
     
-    let activityIndicator = UIActivityIndicatorView()
+    //let activityIndicator = UIActivityIndicatorView()
+    let customActivityIndicator = CustomActivityIndicator()
     
     //background play music
     let player = AVPlayer()
@@ -29,10 +30,12 @@ class MainViewController: UIViewController, FilterDelegate {
     var indicatorCount = 0 {
         didSet {
             if indicatorCount > 0 {
-                activityIndicator.startAnimating()
+                //activityIndicator.startAnimating()
+                customActivityIndicator.alpha = 1.0
                 tableView.isUserInteractionEnabled = false
             } else {
-                activityIndicator.stopAnimating()
+                customActivityIndicator.alpha = 0.0
+                //activityIndicator.stopAnimating()
                 tableView.isUserInteractionEnabled = true
             }
         }
@@ -49,9 +52,14 @@ class MainViewController: UIViewController, FilterDelegate {
         } 
         
         // set indicator view
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
+        //activityIndicator.hidesWhenStopped = true
+        //activityIndicator.center = CGPoint(x: view.frame.width / 2 - 50, y: view.frame.height / 2)
+        customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
+        customActivityIndicator.animate()
+        view.addSubview(customActivityIndicator)
+        
+       // activityIndicator.addSubview(customActivityIndicator)
+       //view.addSubview(activityIndicator)
         
         // load hot tracks
         loadHotTracks()
@@ -344,6 +352,21 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
+            let currentTrack = self.allTracksInTable[indexPath.section][indexPath.row]
+            return ContextMenuViewController.controller(currentTrack: currentTrack)
+        }) { (actions) -> UIMenu? in
+            let actionShare = UIAction(title: "Поделиться", image: UIImage(systemName: "paperplane")) { (action) in
+                print("SOME SHIT")
+            }
+            let actionFavorites = UIAction(title: "В избранное", image: UIImage(systemName: "star")) { (action) in
+                print("SOME FAVORITE")
+            }
+            return UIMenu.init(title: "", image: nil, identifier: nil, options: .destructive, children: [actionShare, actionFavorites])
+        }
+        return configuration
+    }
     
 }
 

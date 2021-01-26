@@ -22,6 +22,8 @@
 		211488712582CF600065C0C6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211488702582CF600065C0C6 /* Extensions.swift */; };
 		2114887525843CA00065C0C6 /* SomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114887425843CA00065C0C6 /* SomeData.swift */; };
 		2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114887925865BC20065C0C6 /* FilterStateModel.swift */; };
+		2117F3BD25BB2CC400C5F637 /* CustomActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117F3BC25BB2CC400C5F637 /* CustomActivityIndicator.swift */; };
+		2117F3C025BC3BE700C5F637 /* ContextMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117F3BF25BC3BE700C5F637 /* ContextMenuViewController.swift */; };
 		211C99802587C55800962948 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C997F2587C55800962948 /* SearchViewController.swift */; };
 		211C99862588127200962948 /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C99852588127200962948 /* PlayingView.swift */; };
 		211C998A258A6A6E00962948 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C9989258A6A6E00962948 /* User.swift */; };
@@ -52,6 +54,8 @@
 		211488702582CF600065C0C6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2114887425843CA00065C0C6 /* SomeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeData.swift; sourceTree = "<group>"; };
 		2114887925865BC20065C0C6 /* FilterStateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStateModel.swift; sourceTree = "<group>"; };
+		2117F3BC25BB2CC400C5F637 /* CustomActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActivityIndicator.swift; sourceTree = "<group>"; };
+		2117F3BF25BC3BE700C5F637 /* ContextMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuViewController.swift; sourceTree = "<group>"; };
 		211C997F2587C55800962948 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		211C99852588127200962948 /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
 		211C9989258A6A6E00962948 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 			children = (
 				21148862257FFA8A0065C0C6 /* TrackCell.swift */,
 				211C99852588127200962948 /* PlayingView.swift */,
+				2117F3BC25BB2CC400C5F637 /* CustomActivityIndicator.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				21148841257FAB660065C0C6 /* MainViewController.swift */,
+				2117F3BF25BC3BE700C5F637 /* ContextMenuViewController.swift */,
 				21148867258293520065C0C6 /* FilterViewController.swift */,
 				2114886A2582BACF0065C0C6 /* PickerViewController.swift */,
 				211C997F2587C55800962948 /* SearchViewController.swift */,
@@ -245,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2117F3C025BC3BE700C5F637 /* ContextMenuViewController.swift in Sources */,
 				21148868258293520065C0C6 /* FilterViewController.swift in Sources */,
 				21148857257FAC420065C0C6 /* NetworkModel.swift in Sources */,
 				2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */,
@@ -258,6 +265,7 @@
 				2114887525843CA00065C0C6 /* SomeData.swift in Sources */,
 				211C99802587C55800962948 /* SearchViewController.swift in Sources */,
 				2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */,
+				2117F3BD25BB2CC400C5F637 /* CustomActivityIndicator.swift in Sources */,
 				21148842257FAB660065C0C6 /* MainViewController.swift in Sources */,
 				2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */,
 				21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */,

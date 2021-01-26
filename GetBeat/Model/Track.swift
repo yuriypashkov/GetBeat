@@ -16,6 +16,7 @@ struct Track: Decodable {
     var currency: String?
     var realName: String?
     var free: String?
+    var hook: String? // припев Да или Нет
     
     var authorName: String {
         if let realName = self.realName {
@@ -34,8 +35,25 @@ struct Track: Decodable {
         if let realName = self.realName {
             let array = realName.components(separatedBy: "-")
             if array.count >= 2 {
-                var name = array[1]
+                
+                // отсекаем из строки название трека
+                var name = ""
+                for i in 1..<array.count {
+                    name += array[i]
+                    if i < array.count - 1 {
+                        name += "-"
+                    }
+                }
                 name.remove(at: name.startIndex)
+                
+                // убираем россию из названия
+                if name[name.index(before: name.endIndex)] == ")" {
+                    name.remove(at: name.index(before: name.endIndex))
+                    if let index = name.lastIndex(of: "(") {
+                       name.removeSubrange(index..<name.endIndex)
+                    }
+                }
+                
                 return name
             } else {
                 return realName
@@ -53,8 +71,22 @@ struct Track: Decodable {
         }
     }
     
+    //private var assetDurationInSeconds: Float64?
+    
+//    private var assetDuration: CMTime? {
+//        if let previewURL = previewUrl {
+//            guard let url = URL(string: previewURL) else { return nil }
+//            let asset = AVURLAsset(url: url, options: nil)
+//            let audioDuration = asset.duration
+//            return audioDuration
+//        }
+//        return nil
+//    }
+    
+    
     var durationInString: String? {
         if let previewUrl = previewUrl {
+
             guard let url = URL(string: previewUrl) else { return nil }
             let asset = AVURLAsset(url: url, options: nil)
             let audioDuration = asset.duration
@@ -66,6 +98,7 @@ struct Track: Decodable {
             } else {
                 return "\(Int(minutes.rounded(.down))):\(seconds)"
             }
+
         }
         return nil
     }

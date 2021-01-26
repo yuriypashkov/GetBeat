@@ -6,10 +6,12 @@ class SearchViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var tableViewBottom: NSLayoutConstraint!
+    
     
     var filteredTracks: [Track] = []
     let networkModel = NetworkModel()
-    let activityIndicator = UIActivityIndicatorView()
+    let customActivityIndicator = CustomActivityIndicator()
     
     //attributes for playing music
     var playingView: PlayingView!
@@ -20,6 +22,8 @@ class SearchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.topItem?.title = "Назад"
+        navigationController?.navigationBar.tintColor = .systemGroupedBackground
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
     }
@@ -52,9 +56,11 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
+        // activity indicator setup
+        customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
+        customActivityIndicator.animate()
+        customActivityIndicator.alpha = 0
+        view.addSubview(customActivityIndicator)
         
         //searchbar settings
         searchBar.delegate = self
@@ -71,20 +77,19 @@ class SearchViewController: UIViewController {
     }
     
     func search(query: String) {
-        activityIndicator.startAnimating()
+        customActivityIndicator.alpha = 1
         networkModel.search(queryString: query) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let array):
                     self.filteredTracks = array
-                    self.activityIndicator.stopAnimating()
+                    self.customActivityIndicator.alpha = 0
                     self.tableView.reloadData()
-                    //self.tableView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                     self.title = "Найдено треков: \(self.filteredTracks.count)"
                 case .failure:
                     self.filteredTracks = []
-                    self.activityIndicator.stopAnimating()
+                    self.customActivityIndicator.alpha = 0
                     self.tableView.reloadData()
                     self.title = "Ничего не найдено"
                 }
@@ -103,12 +108,18 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let query = searchBar.text, query.count >= 2 {
+        if let query = searchBar.text, query.count >= 3 {
             search(query: query)
+        } else {
+            self.title = "Строка поиска слишком мала"
+            customActivityIndicator.alpha = 0
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableViewBottom.constant == 0 {
+            tableViewBottom.constant = 80
+        }
         if tempIndexPath == indexPath {
             
             // если нажал на ту же самую ячейку
@@ -173,6 +184,22 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
+            let currentTrack = self.filteredTracks[indexPath.row]
+            return ContextMenuViewController.controller(currentTrack: currentTrack)
+        }) { (actions) -> UIMenu? in
+            let actionShare = UIAction(title: "Поделиться", image: UIImage(systemName: "paperplane")) { (action) in
+                print("SOME SHIT")
+            }
+            let actionFavorites = UIAction(title: "В избранное", image: UIImage(systemName: "star")) { (action) in
+                print("SOME FAVORITE")
+            }
+            return UIMenu.init(title: "", image: nil, identifier: nil, options: .destructive, children: [actionShare, actionFavorites])
+        }
+        return configuration
     }
     
     
