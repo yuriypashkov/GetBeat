@@ -9,6 +9,11 @@ protocol FilterDelegate {
     func filterValuesSelected(filterDictionary: [String: String?])
 }
 
+protocol HotTracksPageControllerDelegate: class {
+    func setCurrentPage(index: Int)
+    func setNumberOfPages(numberOfPages: Int)
+}
+
 enum PickerEnum: Int {
     case mood
     case genre
