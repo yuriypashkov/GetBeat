@@ -28,8 +28,6 @@
 		211C99862588127200962948 /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C99852588127200962948 /* PlayingView.swift */; };
 		211C998A258A6A6E00962948 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211C9989258A6A6E00962948 /* User.swift */; };
 		21559A8F258BD48F00D18115 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21559A8E258BD48F00D18115 /* LoginViewController.swift */; };
-		216BF0F325C0CED600B0A327 /* HorizontalScrollCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216BF0F225C0CED600B0A327 /* HorizontalScrollCell.swift */; };
-		216BF0F625C0D29900B0A327 /* TopTrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216BF0F525C0D29900B0A327 /* TopTrackCell.swift */; };
 		2172A4EF2590FA0D000AC98E /* DownloadsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */; };
 		2172A5542597557B000AC98E /* VKLoginClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A5532597557A000AC98E /* VKLoginClient.swift */; };
 		2172A55C259AA70C000AC98E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2172A55B259AA70C000AC98E /* SettingsViewController.swift */; };
@@ -62,8 +60,6 @@
 		211C99852588127200962948 /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
 		211C9989258A6A6E00962948 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		21559A8E258BD48F00D18115 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		216BF0F225C0CED600B0A327 /* HorizontalScrollCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalScrollCell.swift; sourceTree = "<group>"; };
-		216BF0F525C0D29900B0A327 /* TopTrackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTrackCell.swift; sourceTree = "<group>"; };
 		2172A4EE2590FA0D000AC98E /* DownloadsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsModel.swift; sourceTree = "<group>"; };
 		2172A5532597557A000AC98E /* VKLoginClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginClient.swift; sourceTree = "<group>"; };
 		2172A55B259AA70C000AC98E /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -154,8 +150,6 @@
 				21148862257FFA8A0065C0C6 /* TrackCell.swift */,
 				211C99852588127200962948 /* PlayingView.swift */,
 				2117F3BC25BB2CC400C5F637 /* CustomActivityIndicator.swift */,
-				216BF0F225C0CED600B0A327 /* HorizontalScrollCell.swift */,
-				216BF0F525C0D29900B0A327 /* TopTrackCell.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -257,11 +251,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				216BF0F325C0CED600B0A327 /* HorizontalScrollCell.swift in Sources */,
 				2117F3C025BC3BE700C5F637 /* ContextMenuViewController.swift in Sources */,
 				21148868258293520065C0C6 /* FilterViewController.swift in Sources */,
 				21148857257FAC420065C0C6 /* NetworkModel.swift in Sources */,
-				216BF0F625C0D29900B0A327 /* TopTrackCell.swift in Sources */,
 				2114886B2582BACF0065C0C6 /* PickerViewController.swift in Sources */,
 				211C99862588127200962948 /* PlayingView.swift in Sources */,
 				2114887A25865BC20065C0C6 /* FilterStateModel.swift in Sources */,

@@ -14,26 +14,9 @@ class PlayingView: UIView {
     var beginTimeValueLabel: UILabel!
     var endTimeValueLabel: UILabel!
     
-    private enum FontType: String {
-        case regular = "Roboto-Regular"
-        case bold = "Roboto-Bold"
-        case medium = "Roboto-Medium"
-    }
-    
-    private func createLabel(textColor: UIColor, fontType: FontType, fontSize: CGFloat, textAlignment: NSTextAlignment, text: String) -> UILabel {
-        let label = UILabel()
-        label.textAlignment = textAlignment
-        label.text = text
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = textColor
-        label.font = UIFont(name: fontType.rawValue, size: fontSize)
-        label.text = "labelName"
-        return label
-    }
-    
     init(position: CGPoint, width: CGFloat, height: CGFloat) {
         super.init(frame: CGRect(x: position.x, y: position.y, width: width, height: height))
-        self.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 0.99)
+        self.backgroundColor = .systemGreen
         
         let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(tapOnView))
         swipeDownGestureRecognizer.direction = .down
@@ -44,24 +27,28 @@ class PlayingView: UIView {
         swipeUpGestureRecognizer.direction = .up
         self.addGestureRecognizer(swipeUpGestureRecognizer)
         
-        trackNameLabel = createLabel(textColor: .white, fontType: .bold, fontSize: 18, textAlignment: .left, text: "trackName")
+        trackNameLabel = UILabel()
+        trackNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        trackNameLabel.textColor = .white
+        trackNameLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        trackNameLabel.text = "TrackName"
         self.addSubview(trackNameLabel)
         
-        authorNameLabel = createLabel(textColor: .systemGray5, fontType: .medium, fontSize: 16, textAlignment: .left, text: "authorName")
+        authorNameLabel = UILabel()
+        authorNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        authorNameLabel.textColor = .systemGray5
+        authorNameLabel.font = UIFont.systemFont(ofSize: 15)
+        authorNameLabel.text = "Author"
         self.addSubview(authorNameLabel)
         
         playPauseButton = UIButton()
-        playPauseButton.backgroundColor = .label
-        playPauseButton.layer.cornerRadius = 20
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
-        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-        playPauseButton.tintColor = .white
+        playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
         self.addSubview(playPauseButton)
         playPauseButton.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
         
         durationSlider = UISlider()
-        durationSlider.tintColor = .white
-        //durationSlider.setThumbImage(UIImage(named: "g"), for: .normal)
+        //durationSlider.thumbTintColor = .black
         durationSlider.translatesAutoresizingMaskIntoConstraints = false
         durationSlider.maximumValue = 30
         durationSlider.minimumValue = 0
@@ -70,10 +57,21 @@ class PlayingView: UIView {
         self.addSubview(durationSlider)
         durationSlider.addTarget(self, action: #selector(didSliderChange(_:)), for: .valueChanged)
         
-        beginTimeValueLabel = createLabel(textColor: .systemGray5, fontType: .regular, fontSize: 13, textAlignment: .center, text: "0:00")
+        beginTimeValueLabel = UILabel()
+        beginTimeValueLabel.textAlignment = .center
+        beginTimeValueLabel.translatesAutoresizingMaskIntoConstraints = false
+        beginTimeValueLabel.textColor = .systemGray5
+        beginTimeValueLabel.font = UIFont.systemFont(ofSize: 13)
+        beginTimeValueLabel.text = "0:00"
+        //beginTimeValueLabel.backgroundColor = .red
         self.addSubview(beginTimeValueLabel)
         
-        endTimeValueLabel = createLabel(textColor: .systemGray5, fontType: .regular, fontSize: 13, textAlignment: .center, text: "0:00")
+        endTimeValueLabel = UILabel()
+        endTimeValueLabel.textAlignment = .center
+        endTimeValueLabel.translatesAutoresizingMaskIntoConstraints = false
+        endTimeValueLabel.textColor = .systemGray5
+        endTimeValueLabel.font = UIFont.systemFont(ofSize: 13)
+        endTimeValueLabel.text = "0:00"
         self.addSubview(endTimeValueLabel)
         
         let constraints = [
@@ -83,8 +81,8 @@ class PlayingView: UIView {
             authorNameLabel.topAnchor.constraint(equalTo: trackNameLabel.safeAreaLayoutGuide.bottomAnchor, constant: 8),
             authorNameLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             authorNameLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -56),
-            playPauseButton.widthAnchor.constraint(equalToConstant: 40),
-            playPauseButton.heightAnchor.constraint(equalToConstant: 40),
+            playPauseButton.widthAnchor.constraint(equalToConstant: 30),
+            playPauseButton.heightAnchor.constraint(equalToConstant: 30),
             playPauseButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             playPauseButton.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
             durationSlider.topAnchor.constraint(equalTo: authorNameLabel.safeAreaLayoutGuide.bottomAnchor, constant: 32),
@@ -125,10 +123,10 @@ class PlayingView: UIView {
         if let player = player {
             if player.timeControlStatus == .playing {
                 player.pause()
-                playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+                playPauseButton.setImage(UIImage(named: "play60px"), for: .normal)
             } else {
                 player.play()
-                playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+                playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
             }
         }
     }
@@ -136,7 +134,7 @@ class PlayingView: UIView {
     func setViewOnDefault() {
         durationSlider.value = 0
         beginTimeValueLabel.text = "0:00"
-        playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        playPauseButton.setImage(UIImage(named: "play60px"), for: .normal)
         if let player = player {
             player.seek(to: CMTimeMakeWithSeconds(Float64(0), preferredTimescale: 1))
         }

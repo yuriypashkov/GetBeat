@@ -16,7 +16,6 @@ class PickerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //print("DELEGATE IS \(delegate)")
         
         if let pickerTitle = pickerTitle {
             pickerTitleLabel.text = pickerTitle
