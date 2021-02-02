@@ -574,7 +574,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" barStyle="black" placeholder="Искать" translatesAutoresizingMaskIntoConstraints="NO" id="6iU-Yy-29I">
-                                <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                                <rect key="frame" x="0.0" y="44" width="326" height="56"/>
                                 <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                 <color key="barTintColor" systemColor="labelColor"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -653,17 +653,31 @@
                                     <outlet property="delegate" destination="psj-Zi-sbH" id="dGV-Dq-AB2"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p07-Ci-Shc">
+                                <rect key="frame" x="326" y="52" width="80" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="KDj-bQ-8LS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
+                                <state key="normal" title="Отмена"/>
+                                <connections>
+                                    <action selector="cancelButtonTap:" destination="psj-Zi-sbH" eventType="touchUpInside" id="OhU-ex-xvB"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="loc-kT-4q8"/>
                         <color key="backgroundColor" systemColor="labelColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="M0o-Cw-wRI" secondAttribute="bottom" id="3oy-GJ-TE0"/>
-                            <constraint firstItem="6iU-Yy-29I" firstAttribute="trailing" secondItem="loc-kT-4q8" secondAttribute="trailing" id="XVe-4h-a18"/>
+                            <constraint firstItem="p07-Ci-Shc" firstAttribute="top" secondItem="loc-kT-4q8" secondAttribute="top" constant="8" id="KMk-Pr-pqo"/>
+                            <constraint firstItem="M0o-Cw-wRI" firstAttribute="top" secondItem="p07-Ci-Shc" secondAttribute="bottom" constant="4" id="gPW-lH-0n6"/>
                             <constraint firstItem="6iU-Yy-29I" firstAttribute="leading" secondItem="loc-kT-4q8" secondAttribute="leading" id="mqB-Xj-05I"/>
                             <constraint firstItem="M0o-Cw-wRI" firstAttribute="leading" secondItem="loc-kT-4q8" secondAttribute="leading" id="nYv-dP-ALN"/>
+                            <constraint firstItem="loc-kT-4q8" firstAttribute="trailing" secondItem="p07-Ci-Shc" secondAttribute="trailing" constant="8" id="qYx-Pn-o7S"/>
                             <constraint firstItem="loc-kT-4q8" firstAttribute="trailing" secondItem="M0o-Cw-wRI" secondAttribute="trailing" id="u3s-4M-TXS"/>
                             <constraint firstItem="6iU-Yy-29I" firstAttribute="top" secondItem="loc-kT-4q8" secondAttribute="top" id="u9z-EM-XYb"/>
                             <constraint firstItem="M0o-Cw-wRI" firstAttribute="top" secondItem="6iU-Yy-29I" secondAttribute="bottom" id="x1D-0Z-OAS"/>
+                            <constraint firstItem="p07-Ci-Shc" firstAttribute="leading" secondItem="6iU-Yy-29I" secondAttribute="trailing" id="yII-eE-1Vv"/>
                         </constraints>
                     </view>
                     <connections>
@@ -674,7 +688,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Vq-Xl-KSH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="896" y="100"/>
+            <point key="canvasLocation" x="895.6521739130435" y="99.776785714285708"/>
         </scene>
         <!--Context Menu View Controller-->
         <scene sceneID="2A1-gZ-E8v">

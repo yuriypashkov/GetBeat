@@ -21,14 +21,20 @@ class SearchViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
-        navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.topItem?.title = "Назад"
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.01, green: 0.01, blue: 0.01, alpha: 1.00)
-        navigationController?.navigationBar.tintColor = UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00)
+//        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.topItem?.title = "Назад"
+//        navigationController?.navigationBar.barTintColor = UIColor(red: 0.01, green: 0.01, blue: 0.01, alpha: 1.00)
+//        navigationController?.navigationBar.tintColor = UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00)
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.layoutIfNeeded()
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.layoutIfNeeded()
+        
+        // activity indicator setup
+        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
+        searchCustomActivityIndicator.animate()
+        searchCustomActivityIndicator.alpha = 0
+        view.addSubview(searchCustomActivityIndicator)
         
     }
     
@@ -48,6 +54,9 @@ class SearchViewController: UIViewController {
         playingView.setViewOnDefault()
         
         NotificationCenter.default.removeObserver(self)
+        
+        searchCustomActivityIndicator.stopAnimate()
+        searchCustomActivityIndicator.removeFromSuperview()
     }
     
     func preloadMusicData(urlString: String) {
@@ -61,14 +70,12 @@ class SearchViewController: UIViewController {
     }
     
     
+    @IBAction func cancelButtonTap(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // activity indicator setup
-        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2 - view.frame.height / 8)
-        searchCustomActivityIndicator.animate()
-        searchCustomActivityIndicator.alpha = 0
-        view.addSubview(searchCustomActivityIndicator)
         
         //searchbar settings
         searchBar.delegate = self
@@ -84,6 +91,7 @@ class SearchViewController: UIViewController {
     }
     
     func search(query: String) {
+        tempIndexPath = nil // чтобы при повторном поиске не было косяков
         searchCustomActivityIndicator.alpha = 1
         networkModel.search(queryString: query) { (result) in
             DispatchQueue.main.async {
@@ -182,7 +190,6 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredTracks.count
-        //return 3
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

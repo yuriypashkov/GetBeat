@@ -34,21 +34,16 @@ class CustomActivityIndicator: UIView {
         }
     }
     
-//    func stopAnimating() {
-//        guard subviews.count != 0 else {return}
-//        for i in 0..<subviews.count{
-//            subviews[i].removeFromSuperview()
-//        }
-//        configure()
-//    }
-    
     func animate() {
         var delay: Double = 0
+        stopped = false
         for circle in circleArray {
             animateCircle(circle, delay: delay)
             delay += 0.95
         }
     }
+    
+    private var stopped = true
     
     private func animateCircle(_ circle: UIView, delay: Double) {
         UIView.animate(withDuration: 0.8, delay: delay, options: .curveLinear) {
@@ -63,10 +58,16 @@ class CustomActivityIndicator: UIView {
                     circle.frame = CGRect(x: 140, y: 5, width: 20, height: 20)
                 } completion: { (completed) in
                     circle.frame = CGRect(x: -20, y: 5, width: 20, height: 20)
-                    self.animateCircle(circle, delay: 0)
+                    if self.stopped { return } else {
+                        self.animateCircle(circle, delay: 0)
+                    }
                 }
             }
         }
+    }
+    
+    func stopAnimate() {
+        stopped = true
     }
     
     required init?(coder: NSCoder) {

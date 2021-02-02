@@ -13,7 +13,7 @@ class MainViewController: UIViewController, FilterDelegate {
     var networkModel = NetworkModel()
     
     weak var hotTracksProtocolDelegate: HotTracksPageControllerDelegate?
-    let customActivityIndicator = CustomActivityIndicator()
+    var customActivityIndicator = CustomActivityIndicator()
     
     //background play music
     let player = AVPlayer()
@@ -30,20 +30,15 @@ class MainViewController: UIViewController, FilterDelegate {
     var indicatorCount = 0 {
         didSet {
             if indicatorCount > 0 {
-                //customActivityIndicator.animate()
                 customActivityIndicator.alpha = 1.0
                 tableView.isUserInteractionEnabled = false
             } else {
-                //customActivityIndicator.stopAnimating()
                 customActivityIndicator.alpha = 0.0
                 tableView.isUserInteractionEnabled = true
             }
         }
     }
-    
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        return .lightContent
-//    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,12 +48,7 @@ class MainViewController: UIViewController, FilterDelegate {
             playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 75 - tabBarHeight), width: view.frame.size.width, height: 180)
             view.addSubview(playingView)
             playingView.alpha = 0
-        } 
-        
-        // set indicator view
-        customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
-        customActivityIndicator.animate()
-        view.addSubview(customActivityIndicator)
+        }
         
         // load hot tracks
         loadHotTracks()
@@ -72,6 +62,10 @@ class MainViewController: UIViewController, FilterDelegate {
         navigationController?.navigationBar.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
+        // set indicator view
+        customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
+        customActivityIndicator.animate()
+        view.addSubview(customActivityIndicator)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -86,6 +80,9 @@ class MainViewController: UIViewController, FilterDelegate {
         playingView.setViewOnDefault()
         
         NotificationCenter.default.removeObserver(self)
+        
+        customActivityIndicator.stopAnimate()
+        customActivityIndicator.removeFromSuperview()
     }
     
     func preloadMusicData(urlString: String) {
@@ -272,8 +269,9 @@ class MainViewController: UIViewController, FilterDelegate {
     @IBAction func searchButtonTap(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
-            navigationController?.pushViewController(searchViewController, animated: true)
-            //present(searchViewController, animated: true, completion: nil)
+            //navigationController?.pushViewController(searchViewController, animated: true)
+            searchViewController.modalPresentationStyle = .fullScreen
+            present(searchViewController, animated: true, completion: nil)
         }
     }
     
