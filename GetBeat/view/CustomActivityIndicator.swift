@@ -34,6 +34,14 @@ class CustomActivityIndicator: UIView {
         }
     }
     
+//    func stopAnimating() {
+//        guard subviews.count != 0 else {return}
+//        for i in 0..<subviews.count{
+//            subviews[i].removeFromSuperview()
+//        }
+//        configure()
+//    }
+    
     func animate() {
         var delay: Double = 0
         for circle in circleArray {

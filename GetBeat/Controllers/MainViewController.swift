@@ -30,18 +30,20 @@ class MainViewController: UIViewController, FilterDelegate {
     var indicatorCount = 0 {
         didSet {
             if indicatorCount > 0 {
+                //customActivityIndicator.animate()
                 customActivityIndicator.alpha = 1.0
                 tableView.isUserInteractionEnabled = false
             } else {
+                //customActivityIndicator.stopAnimating()
                 customActivityIndicator.alpha = 0.0
                 tableView.isUserInteractionEnabled = true
             }
         }
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -271,6 +273,7 @@ class MainViewController: UIViewController, FilterDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
             navigationController?.pushViewController(searchViewController, animated: true)
+            //present(searchViewController, animated: true, completion: nil)
         }
     }
     
