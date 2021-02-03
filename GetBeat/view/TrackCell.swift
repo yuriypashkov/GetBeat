@@ -23,7 +23,6 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     // MARK: IB Methods
     @IBAction func downloadButtonTap(_ sender: UIButton) {
         if track?.free == "0" {
-            print("BUY")
             guard let url = URL(string: "https://getbeat.ru/order") else { return }
             let svc = SFSafariViewController(url: url)
             window?.rootViewController?.present(svc, animated: true, completion: nil)

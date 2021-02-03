@@ -7,6 +7,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var titleLabel: UILabel!
     
     
     var filteredTracks: [Track] = []
@@ -19,19 +20,15 @@ class SearchViewController: UIViewController {
     var playerItem: AVPlayerItem?
     private var playingTrackObserver: Any?
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+         return .lightContent
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
-//        navigationController?.navigationBar.isHidden = false
-//        navigationController?.navigationBar.topItem?.title = "Назад"
-//        navigationController?.navigationBar.barTintColor = UIColor(red: 0.01, green: 0.01, blue: 0.01, alpha: 1.00)
-//        navigationController?.navigationBar.tintColor = UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00)
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
-//        navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.navigationBar.layoutIfNeeded()
         
         // activity indicator setup
-        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
         searchCustomActivityIndicator.animate()
         searchCustomActivityIndicator.alpha = 0
         view.addSubview(searchCustomActivityIndicator)
@@ -84,13 +81,14 @@ class SearchViewController: UIViewController {
         view.addGestureRecognizer(tapGestureRecognizer)
         
         // playingView
-        playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 175), width: view.frame.size.width, height: 180)
+        playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 90), width: view.frame.size.width, height: 180)
         view.addSubview(playingView)
         playingView.alpha = 0
         
     }
     
     func search(query: String) {
+        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2) // при каждом поиске размещаем по центру индикатор, дабы не было проблем при смене ориенитации телефона в пространстве
         tempIndexPath = nil // чтобы при повторном поиске не было косяков
         searchCustomActivityIndicator.alpha = 1
         networkModel.search(queryString: query) { (result) in
@@ -101,12 +99,12 @@ class SearchViewController: UIViewController {
                     self.searchCustomActivityIndicator.alpha = 0
                     self.tableView.reloadData()
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                    self.title = "Найдено треков: \(self.filteredTracks.count)"
+                    self.titleLabel.text = "Найдено треков: \(self.filteredTracks.count)"
                 case .failure:
                     self.filteredTracks = []
                     self.searchCustomActivityIndicator.alpha = 0
                     self.tableView.reloadData()
-                    self.title = "Ничего не найдено"
+                    self.titleLabel.text = "Ничего не найдено"
                 }
             }
         }
@@ -127,14 +125,14 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
             search(query: query)
             dismissKeyboard()
         } else {
-            self.title = "Строка поиска слишком мала"
+            titleLabel.text = "Строка поиска слишком мала"
             searchCustomActivityIndicator.alpha = 0
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableViewBottom.constant == 0 {
-            tableViewBottom.constant = 80
+            tableViewBottom.constant = 90
         }
         if tempIndexPath == indexPath {
 
@@ -203,19 +201,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
     }
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
-            let currentTrack = self.filteredTracks[indexPath.row]
-            return ContextMenuViewController.controller(currentTrack: currentTrack)
-        }) { (actions) -> UIMenu? in
-            let actionShare = UIAction(title: "Поделиться", image: UIImage(systemName: "paperplane")) { (action) in
-                print("SOME SHIT")
-            }
-            let actionFavorites = UIAction(title: "В избранное", image: UIImage(systemName: "star")) { (action) in
-                print("SOME FAVORITE")
-            }
-            return UIMenu.init(title: "", image: nil, identifier: nil, options: .destructive, children: [actionShare, actionFavorites])
-        }
-        return configuration
+        return ContextMenuModel.createMenu(currentTrack: filteredTracks[indexPath.row])
     }
 
 

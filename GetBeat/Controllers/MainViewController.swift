@@ -29,6 +29,7 @@ class MainViewController: UIViewController, FilterDelegate {
     // 2 запроса к бэку при старте приложения, поэтому такой выход для правильного выключения индикатора загрузки
     var indicatorCount = 0 {
         didSet {
+            customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
             if indicatorCount > 0 {
                 customActivityIndicator.alpha = 1.0
                 tableView.isUserInteractionEnabled = false
@@ -43,9 +44,10 @@ class MainViewController: UIViewController, FilterDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let tabBarHeight = tabBarController?.tabBar.frame.size.height {
+        if let tabBarHeight = tabBarController?.tabBar.frame.size.height, let window = UIApplication.shared.windows.first {
             // playingView
-            playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 75 - tabBarHeight), width: view.frame.size.width, height: 180)
+            let bottomInset = view.frame.size.height - tabBarHeight - window.safeAreaInsets.bottom - 75
+            playingView = PlayingView(position: CGPoint(x: 0, y: bottomInset), width: view.frame.size.width, height: 180)
             view.addSubview(playingView)
             playingView.alpha = 0
         }
@@ -57,13 +59,16 @@ class MainViewController: UIViewController, FilterDelegate {
         loadData()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+         return .lightContent
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
         // set indicator view
-        customActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
         customActivityIndicator.animate()
         view.addSubview(customActivityIndicator)
     }
@@ -281,7 +286,8 @@ class MainViewController: UIViewController, FilterDelegate {
         loadData()
     }
     
-    
+    // MARK: - Variable for hotTracksContextMenu
+    var hotTrackIndex = 0
     
 }
 
@@ -311,6 +317,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
         if scrollView.tag == 2 {
             let index = Int(scrollView.contentOffset.x) / Int(scrollView.frame.width)
             hotTracksProtocolDelegate?.setCurrentPage(index: index)
+            hotTrackIndex = index
+            //hotTracksProtocolDelegate?.setCurrentTrack(track: hotTracks[index])
         }
     }
     
@@ -387,7 +395,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //return 70
         if indexPath.section == 0 {
             return 200
         } else {
@@ -396,21 +403,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard indexPath.section != 0 else {return nil}
-        
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: { () -> UIViewController? in
-            let currentTrack = self.allTracksInTable[indexPath.section][indexPath.row]
-            return ContextMenuViewController.controller(currentTrack: currentTrack)
-        }) { (actions) -> UIMenu? in
-            let actionShare = UIAction(title: "Поделиться", image: UIImage(systemName: "paperplane")) { (action) in
-                print("SOME SHIT")
-            }
-            let actionFavorites = UIAction(title: "В избранное", image: UIImage(systemName: "star")) { (action) in
-                print("SOME FAVORITE")
-            }
-            return UIMenu.init(title: "", image: nil, identifier: nil, options: .destructive, children: [actionShare, actionFavorites])
+        guard indexPath.section != 0 else {
+            return ContextMenuModel.createMenu(currentTrack: hotTracks[hotTrackIndex])
         }
-        return configuration
+        return ContextMenuModel.createMenu(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
     }
     
 }

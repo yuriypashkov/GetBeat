@@ -4,7 +4,7 @@
 //
 //  Created by Yuriy Pashkov on 1/30/21.
 //
-
+import SafariServices
 import UIKit
 
 class TopTrackCell: UICollectionViewCell {
@@ -18,6 +18,13 @@ class TopTrackCell: UICollectionViewCell {
             super.prepareForReuse()
             //  здесь надо обнулить данные, которые грузятся из сети, дабы корректно работало переиспользование
         }
+    
+    @IBAction func buyButtonTap(_ sender: UIButton) {
+        guard let url = URL(string: "https://getbeat.ru/order") else { return }
+        let svc = SFSafariViewController(url: url)
+        window?.rootViewController?.present(svc, animated: true, completion: nil)
+    }
+    
     
     let images = [
             UIImage(named: "1"),

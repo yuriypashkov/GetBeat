@@ -17,9 +17,10 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
     // MARK: Attributes
     var token: String?
     var userVKid: String?
-    var user: User?
+    //var user: User?
     let controller = UIViewController()
     let activityIndicator = UIActivityIndicatorView()
+    let defaults = UserDefaults.standard
     
     var webView: WKWebView = {
                 let web = WKWebView.init(frame: UIScreen.main.bounds)
@@ -68,20 +69,27 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
                 let array = string.components(separatedBy: "access_token=")
                 let secondArray = array[1].components(separatedBy: "&")
                 token = secondArray[0]
+                
+                // save token to defaults
+                defaults.setValue(token, forKey: "vkToken")
+                
                 if let idElement = secondArray.last {
                     userVKid = idElement.components(separatedBy: "=")[1]
+                    // save VK id in defaults
+                    defaults.setValue(userVKid, forKey: "userVKid")
                     // отправляем данные в ВК
                     getDataFromVK { (result) in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let tempUser):
-                                self.user = tempUser
+                                //self.user = tempUser
                                 self.controller.dismiss(animated: true, completion: nil)
                                 self.delegate?.setupElements(state: true)
-                                self.getDataFromGetBeat()
+                                self.getDataFromGetBeat(user: tempUser)
                                 
-                            case .failure:
-                                self.user = nil
+                            case .failure(let error):
+                                //self.user = nil
+                            print(error)
                             }
                         }
                     }
@@ -94,7 +102,7 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
     
     func getDataFromVK(onResult: @escaping (Result<User, Error>) -> Void) {
         guard let userID = userVKid, let token = token else {return}
-        let urlString = "https://api.vk.com/method/users.get?user_ids=\(userID)&fields=bdate,photo,photo_rec&access_token=\(token)&v=5.126"
+        let urlString = "https://api.vk.com/method/users.get?user_ids=\(userID)&fields=bdate,photo_200,photo_rec&access_token=\(token)&v=5.126"
         let url = URL(string: urlString)!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -114,15 +122,15 @@ class VKLoginClient: NSObject, WKNavigationDelegate {
         dataTask.resume()
     }
     
-    func getDataFromGetBeat() {
-        guard let user = user else { return }
+    func getDataFromGetBeat(user: User) {
+        //guard let user = user else { return }
         
         let urlString = "https://getbeat.ru/lib/login.php"
         let url = URL(string: urlString)!
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
 
-        if let id = userVKid, let firstname = user.firstName, let lastname = user.lastName, let photoRec = user.photoRec {
+        if let id = userVKid, let firstname = user.firstName, let lastname = user.lastName, let photoRec = user.photo {
             let hash = "5934678\(id)kuafDWBZZArFO5zBvZfL"
             //print(hash)
             //print(hash.md5Value)

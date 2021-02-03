@@ -12,6 +12,8 @@ class HorizontalScrollCell: UITableViewCell {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var pageControlView: UIView!
     
+    //private var currentTrackInScrollView: Track?
+    
     func registerDataSource(dataSource: UICollectionViewDataSource){
         self.collectionView.dataSource = dataSource
     }
@@ -22,12 +24,17 @@ class HorizontalScrollCell: UITableViewCell {
     
 }
 
-extension HorizontalScrollCell: HotTracksPageControllerDelegate {
+extension HorizontalScrollCell: HotTracksPageControllerDelegate { //}, UICollectionViewDelegate {
+    
+//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+//        if let currentTrack = currentTrackInScrollView {
+//            return ContextMenuModel.createMenu(currentTrack: currentTrack)
+//        } else {
+//            return nil
+//        }
+//    }
 
     func setNumberOfPages(numberOfPages: Int) {
-        //pageControl.numberOfPages = numberOfPages
-        //pageControl.alpha = 1
-        
         pageControlView.subviews.forEach { $0.removeFromSuperview() }
 
         var spacing: CGFloat = 0
@@ -41,11 +48,13 @@ extension HorizontalScrollCell: HotTracksPageControllerDelegate {
     }
 
     func setCurrentPage(index: Int) {
-        //pageControl.currentPage = index
-        
         for i in 0..<pageControlView.subviews.count {
             pageControlView.subviews[i].backgroundColor = (index == i) ? .systemPink : .systemGray
         }
     }
+//    
+//    func setCurrentTrack(track: Track) {
+//        currentTrackInScrollView = track
+//    }
 
 }

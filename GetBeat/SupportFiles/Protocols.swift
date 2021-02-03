@@ -12,6 +12,7 @@ protocol FilterDelegate {
 protocol HotTracksPageControllerDelegate: class {
     func setCurrentPage(index: Int)
     func setNumberOfPages(numberOfPages: Int)
+    //func setCurrentTrack(track: Track)
 }
 
 enum PickerEnum: Int {

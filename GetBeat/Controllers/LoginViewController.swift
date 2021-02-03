@@ -6,10 +6,12 @@ class LoginViewController: UIViewController, VKLoginProtocol {
 
     // MARK: Attributes
     let networkModel = NetworkModel()
-    let activityIndicator = UIActivityIndicatorView()
+    //let activityIndicator = UIActivityIndicatorView()
+    let customActivityIndicator = CustomActivityIndicator()
     let defaults = UserDefaults.standard
     let vkLoginClient = VKLoginClient()
     //var currentUser: User?
+    //var user200pxAvatarURL: String = ""
     
     // MARK: IBOutlets
     
@@ -26,11 +28,27 @@ class LoginViewController: UIViewController, VKLoginProtocol {
     
     // MARK: IBOutlets Actions
     @IBAction func vkButtonTap(_ sender: UIButton) {
-        //vkLoginClient.testQueues()
-        vkLoginClient.showPermissions()
         //let controller = vkLoginClient.showPermissions()
         //present(controller, animated: true, completion: nil)
         // можно попробовать релизовать нормально модель: здесь делать видимой вторую кнопку с надписью Войти и уже по тапу на нее вызывать метод из модели, который вернет JSON от гетбит
+//        if let token = defaults.value(forKey: "vkToken"), let userID = defaults.value(forKey: "userVKid") {
+//            //print("WE HAVE SAVED TOKEN: \(token) and USERID: \(userID)")
+//            vkLoginClient.token = "\(token)"
+//            vkLoginClient.userVKid = "\(userID)"
+//            vkLoginClient.getDataFromVK { (result) in
+//                DispatchQueue.main.async {
+//                    switch result {
+//                    case .success(let user):
+//                        self.setupElements(state: true)
+//                        self.vkLoginClient.getDataFromGetBeat(user: user)
+//                    case .failure(let error):
+//                        print(error)
+//                    }
+//                }
+//            }
+//        } else {
+            vkLoginClient.showPermissions()
+        //}
     }
     
     
@@ -52,6 +70,9 @@ class LoginViewController: UIViewController, VKLoginProtocol {
         // на всякий случай очистим textfields
         usernameTextField.text = ""
         passwordTextField.text = ""
+        //удаляем токен ВК
+        defaults.removeObject(forKey: "vkToken")
+        defaults.removeObject(forKey: "userVKid")
     }
     
     @IBAction func newLoginButtonTap(_ sender: UIButton) {
@@ -63,6 +84,10 @@ class LoginViewController: UIViewController, VKLoginProtocol {
         guard checkInputData(username: username, password: password) else { return }
         
         loginAttemption(username: username, password: password)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+         return .lightContent
     }
         
     override func viewDidLoad() {
@@ -79,19 +104,37 @@ class LoginViewController: UIViewController, VKLoginProtocol {
         passwordTextField.autocorrectionType = .no
         
         // set indicator view
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
+        //activityIndicator.hidesWhenStopped = true
+        //activityIndicator.center = view.center
+        //view.addSubview(activityIndicator)
+        customActivityIndicator.center = CGPoint(x: view.frame.size.width / 2 - 70, y: view.frame.size.height / 2)
+        customActivityIndicator.animate()
+        customActivityIndicator.alpha = 0
+        view.addSubview(customActivityIndicator)
         
         // attemption login
-       if let username = defaults.string(forKey: "username"), let password = defaults.string(forKey: "password") {
+        if let username = defaults.string(forKey: "username"), let password = defaults.string(forKey: "password") {
             loginAttemption(username: username, password: password)
-       }
+        }
+        if let token = defaults.value(forKey: "vkToken"), let userID = defaults.value(forKey: "userVKid") {
+            vkLoginClient.token = "\(token)"
+            vkLoginClient.userVKid = "\(userID)"
+            vkLoginClient.getDataFromVK { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let user):
+                        
+                        self.setupElements(state: true)
+                        self.vkLoginClient.getDataFromGetBeat(user: user)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
         
         // image view rounded
         photoImageView.layer.cornerRadius = photoImageView.frame.width / 2
-        //photoImageView.layer.masksToBounds = true
-        
     }
     
     
@@ -111,7 +154,8 @@ class LoginViewController: UIViewController, VKLoginProtocol {
     }
     
     func loginAttemption(username: String, password: String) {
-        activityIndicator.startAnimating()
+        //activityIndicator.startAnimating()
+        customActivityIndicator.alpha = 1.0
         setupElements(state: true)
         passwordTextField.text = password
         usernameTextField.text = username
@@ -132,7 +176,8 @@ class LoginViewController: UIViewController, VKLoginProtocol {
                         self.errorLabel.alpha = 1
                         self.errorLabel.text = "Произошла ошибка"
                     }
-                    self.activityIndicator.stopAnimating()
+                    //self.activityIndicator.stopAnimating()
+                    self.customActivityIndicator.alpha = 0
                     self.setupElements(state: false)
                 }
             }
@@ -158,9 +203,10 @@ class LoginViewController: UIViewController, VKLoginProtocol {
                 defaults.setValue(username, forKey: "username")
                 defaults.setValue(password, forKey: "password")
             } else {
+                print("USER SETUP AFTER LOGIN: \(user)")
+                // СОЗДАТЬ ОТДЕЛЬНУЮ МОДЕЛЬ ДЛЯ ЮЗЕРА ВОЗВРАЩАЕМОГО БЭКОМ GETBEAT!!!
                 if let firstname = user.firstName, let lastname = user.lastName, let photoRecUrl = user.photoRec {
                     welcomeLabel.text = "Добро пожаловать, \(firstname) \(lastname)"
-                    //photoImageView.image = UIImage(named: "vkIcon200px")
                     photoImageView.alpha = 1
                     photoImageView.lazyDownloadImage(link: photoRecUrl)
                 }
