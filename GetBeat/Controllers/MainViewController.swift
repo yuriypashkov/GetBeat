@@ -75,6 +75,10 @@ class MainViewController: UIViewController, FilterDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         
+
+    }
+    
+    private func methodForDisappear() {
         if let ob = self.playingTrackObserver {
             player.removeTimeObserver(ob)
             playingTrackObserver = nil
@@ -89,6 +93,15 @@ class MainViewController: UIViewController, FilterDelegate {
         customActivityIndicator.stopAnimate()
         customActivityIndicator.removeFromSuperview()
     }
+    
+    // MARK: - AVPlayer Methods
+//    public func disconnectAVPlayer() {
+//      MainViewController.player = nil
+//    }
+//
+//    public func reconnectAVPlayer() {
+//      MainViewController.player = player
+//    }
     
     func preloadMusicData(urlString: String) {
         let url = URL(string: urlString)
@@ -246,6 +259,9 @@ class MainViewController: UIViewController, FilterDelegate {
     // MARK: Filtering
     
     @IBAction func filterButtonTap(_ sender: UIButton) {
+        // пока так выключаем воспроизведение
+        methodForDisappear()
+        
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let filterViewController = storyboard.instantiateViewController(withIdentifier: "FilterViewController") as? FilterViewController {
             filterViewController.delegate = self

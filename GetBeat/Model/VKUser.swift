@@ -2,7 +2,7 @@
 import Foundation
 
 // это очень странная модель, которая служит и для получения пользователя от API VK, и от бэка getbeat, ибо поля пересекаются в названиях
-struct User: Decodable {
+struct VKUser: Decodable {
     
     var id: String?
     var vkid: String?
@@ -12,7 +12,9 @@ struct User: Decodable {
     var photoRec: String?
     var login: Bool?
     var nickname: String?
+    // getBeat's user attributes
     var hash: String?
+    var buyTracks: [BuyTrack]?
     
     
     enum CodingKeys: String, CodingKey {
@@ -26,6 +28,7 @@ struct User: Decodable {
         case nickname
         case hash
         case photo_200
+        case buyTracks
     }
     
     init(from decoder: Decoder) throws {
@@ -39,9 +42,10 @@ struct User: Decodable {
         self.nickname = try? container.decode(String.self, forKey: .nickname)
         self.photoRec = try? container.decode(String.self, forKey: .photo_rec)
         self.hash = try? container.decode(String.self, forKey: .hash)
+        self.buyTracks = try? container.decode([BuyTrack].self, forKey: .buyTracks)
     }
 }
 
 struct Response: Decodable {
-    var response: [User]
+    var response: [VKUser]
 }

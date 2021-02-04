@@ -17,6 +17,9 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+         return .lightContent
+    }
     
     @IBAction func clearCacheTap(_ sender: UIButton) {
         deleteFilesFromCache()
@@ -42,7 +45,7 @@ class SettingsViewController: UIViewController {
                 let fileSizeInBytes = attribute[FileAttributeKey.size] as! Int64
                 let fileSizeInMbytes = Float(fileSizeInBytes) / (1024 * 1024)
                 cacheSize += fileSizeInMbytes
-                print(round(fileSizeInMbytes*100)/100)
+                //print(round(fileSizeInMbytes*100)/100)
             }
             clearCacheLabel.text = "Размер кэша \(round(cacheSize*100)/100) Мб"
         } catch {

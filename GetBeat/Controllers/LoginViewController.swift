@@ -2,20 +2,17 @@
 import UIKit
 import WebKit
 
-class LoginViewController: UIViewController, VKLoginProtocol {
+class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegate {
 
     // MARK: Attributes
     let networkModel = NetworkModel()
-    //let activityIndicator = UIActivityIndicatorView()
     let customActivityIndicator = CustomActivityIndicator()
     let defaults = UserDefaults.standard
     let vkLoginClient = VKLoginClient()
-    //var currentUser: User?
-    //var user200pxAvatarURL: String = ""
+    var currentPurchase: [BuyTrack] = []
     
     // MARK: IBOutlets
     
-    @IBOutlet weak var loginItemsView: UIView!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
@@ -25,45 +22,27 @@ class LoginViewController: UIViewController, VKLoginProtocol {
     @IBOutlet weak var vkLabel: UILabel!
     @IBOutlet weak var vkButton: UIButton!
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var purchaseButton: UIButton!
     
     // MARK: IBOutlets Actions
     @IBAction func vkButtonTap(_ sender: UIButton) {
-        //let controller = vkLoginClient.showPermissions()
-        //present(controller, animated: true, completion: nil)
         // можно попробовать релизовать нормально модель: здесь делать видимой вторую кнопку с надписью Войти и уже по тапу на нее вызывать метод из модели, который вернет JSON от гетбит
-//        if let token = defaults.value(forKey: "vkToken"), let userID = defaults.value(forKey: "userVKid") {
-//            //print("WE HAVE SAVED TOKEN: \(token) and USERID: \(userID)")
-//            vkLoginClient.token = "\(token)"
-//            vkLoginClient.userVKid = "\(userID)"
-//            vkLoginClient.getDataFromVK { (result) in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                    case .success(let user):
-//                        self.setupElements(state: true)
-//                        self.vkLoginClient.getDataFromGetBeat(user: user)
-//                    case .failure(let error):
-//                        print(error)
-//                    }
-//                }
-//            }
-//        } else {
-            vkLoginClient.showPermissions()
-        //}
+        setupElements(state: true)
+        logoutButton.alpha = 0
+        vkLoginClient.showPermissions()
     }
     
+    @IBAction func purchaseButtonTap(_ sender: UIButton) {
+        //print("PURCHASE BUTTON TAP")
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        let purchaseViewController = storyboard.instantiateViewController(withIdentifier: "PurchaseViewController") as! PurchaseViewController
+        purchaseViewController.purchase = currentPurchase
+        present(purchaseViewController, animated: true, completion: nil)
+    }
     
     @IBAction func logoutButtonTap(_ sender: UIButton) {
         // разобраться с setupElements
         setupElements(state: false)
-        // прячем ненужные элементы и показываем нужные
-        vkLabel.alpha = 1
-        vkButton.alpha = 1
-        usernameTextField.alpha = 1
-        passwordTextField.alpha = 1
-        loginButton.alpha = 1
-        logoutButton.alpha = 0
-        welcomeLabel.alpha = 0
-        photoImageView.alpha = 0
         // удаляем логин и пароль
         defaults.removeObject(forKey: "username")
         defaults.removeObject(forKey: "password")
@@ -77,23 +56,49 @@ class LoginViewController: UIViewController, VKLoginProtocol {
     
     @IBAction func newLoginButtonTap(_ sender: UIButton) {
         errorLabel.alpha = 0
+        setupElements(state: true)
+        logoutButton.alpha = 0
         guard let username = usernameTextField.text, let password = passwordTextField.text else {
             errorLabel.alpha = 1
             errorLabel.text = "Ошибка"
             return }
         guard checkInputData(username: username, password: password) else { return }
         
-        loginAttemption(username: username, password: password)
+        emailLoginAttemption(username: username, password: password)
+    }
+    
+    // MARK: - ViewController methods
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
          return .lightContent
     }
+    
+    // ПРОДУМАТЬ МОМЕНТ ВОЗВРАЩЕНИЯ IndicatorView
+    override func viewWillDisappear(_ animated: Bool) {
+        customActivityIndicator.stopAnimate()
+        customActivityIndicator.removeFromSuperview()
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        vkLoginClient.delegate = self
+        // уберём элементы на момент проверки загрузки
+        setupElements(state: true)
+        logoutButton.alpha = 0
         
+        // set indicator view
+        customActivityIndicator.center = CGPoint(x: view.frame.size.width / 2 - 70, y: view.frame.size.height / 2)
+        customActivityIndicator.animate()
+        customActivityIndicator.alpha = 1
+        view.addSubview(customActivityIndicator)
+        
+        vkLoginClient.delegate = self
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+
         // закрытие клавиатуры по тапу на вьюхе
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapOnView))
         view.isUserInteractionEnabled = true
@@ -102,36 +107,19 @@ class LoginViewController: UIViewController, VKLoginProtocol {
         // constraint warn
         usernameTextField.autocorrectionType = .no
         passwordTextField.autocorrectionType = .no
-        
-        // set indicator view
-        //activityIndicator.hidesWhenStopped = true
-        //activityIndicator.center = view.center
-        //view.addSubview(activityIndicator)
-        customActivityIndicator.center = CGPoint(x: view.frame.size.width / 2 - 70, y: view.frame.size.height / 2)
-        customActivityIndicator.animate()
-        customActivityIndicator.alpha = 0
-        view.addSubview(customActivityIndicator)
-        
+
         // attemption login
         if let username = defaults.string(forKey: "username"), let password = defaults.string(forKey: "password") {
-            loginAttemption(username: username, password: password)
-        }
-        if let token = defaults.value(forKey: "vkToken"), let userID = defaults.value(forKey: "userVKid") {
-            vkLoginClient.token = "\(token)"
-            vkLoginClient.userVKid = "\(userID)"
-            vkLoginClient.getDataFromVK { (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let user):
-                        
-                        self.setupElements(state: true)
-                        self.vkLoginClient.getDataFromGetBeat(user: user)
-                    case .failure(let error):
-                        print(error)
-                    }
-                }
+            emailLoginAttemption(username: username, password: password)
+        } else
+            if let token = defaults.value(forKey: "vkToken"), let userID = defaults.value(forKey: "userVKid") {
+                vkLoginClient.token = "\(token)"
+                vkLoginClient.userVKid = "\(userID)"
+                vkLoginAttemption()
+            } else {
+                customActivityIndicator.alpha = 0
+                setupElements(state: false)
             }
-        }
         
         // image view rounded
         photoImageView.layer.cornerRadius = photoImageView.frame.width / 2
@@ -145,18 +133,34 @@ class LoginViewController: UIViewController, VKLoginProtocol {
     
     // метод - прятать элементы на время загрузки
     func setupElements(state: Bool) {
-        loginButton.isHidden = state
-        passwordTextField.isHidden = state
-        usernameTextField.isHidden = state
-        vkLabel.isHidden = state
-        vkButton.isHidden = state
-        //photoImageView.isHidden = state
+        loginButton.alpha = state ? 0 : 1
+        passwordTextField.alpha = state ? 0 : 1
+        usernameTextField.alpha = state ? 0 : 1
+        vkLabel.alpha = state ? 0 : 1
+        vkButton.alpha = state ? 0 : 1
+        
+        photoImageView.alpha = state ? 1 : 0
+        logoutButton.alpha = state ? 1 : 0
+        welcomeLabel.alpha = state ? 1 : 0
+        purchaseButton.alpha = state ? 1 : 0
+        
     }
     
-    func loginAttemption(username: String, password: String) {
-        //activityIndicator.startAnimating()
+    func vkLoginAttemption() {
+        vkLoginClient.getDataFromVK { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let user):
+                    self.vkLoginClient.getDataFromGetBeat(user: user)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    func emailLoginAttemption(username: String, password: String) {
         customActivityIndicator.alpha = 1.0
-        setupElements(state: true)
         passwordTextField.text = password
         usernameTextField.text = username
 
@@ -170,48 +174,57 @@ class LoginViewController: UIViewController, VKLoginProtocol {
                     switch result {
                     case .success(let user):
                         if let login = user.login {
-                            self.setupAfterLogin(state: login, user: user, username: username, password: password, isEmailLogin: true)
+                            if login {
+                                self.defaults.setValue(username, forKey: "username")
+                                self.defaults.setValue(password, forKey: "password")
+                            }
+                            self.setupAfterLogin(state: login, user: user, isEmailLogin: true)
                         }
                     case .failure:
+                        self.setupElements(state: false)
                         self.errorLabel.alpha = 1
                         self.errorLabel.text = "Произошла ошибка"
                     }
-                    //self.activityIndicator.stopAnimating()
                     self.customActivityIndicator.alpha = 0
-                    self.setupElements(state: false)
                 }
             }
     }
     
-    func setupAfterLogin(state: Bool, user: User, username: String, password: String, isEmailLogin: Bool) {
+    func setupAfterLogin(state: Bool, user: VKUser, isEmailLogin: Bool) {
+        customActivityIndicator.alpha = 0
         if state {
-            //setupElements(state: false)
-            // прячем ненужные элементы и показываем нужные
-            vkLabel.alpha = 0
-            vkButton.alpha = 0
-            usernameTextField.alpha = 0
-            passwordTextField.alpha = 0
-            loginButton.alpha = 0
-            logoutButton.alpha = 1
-            welcomeLabel.alpha = 1
+            setupElements(state: true)
             
             // в зависимости от типа логина - разные поля заполняются
             if isEmailLogin {
-                if let nickname = user.nickname {
-                    welcomeLabel.text = "Добро пожаловать, \(nickname)"
+                if let nickname = user.nickname, let firstname = user.firstName, let photoRecURL = user.photoRec {
+                    if nickname == "" {
+                        welcomeLabel.text = "Добро пожаловать, \(firstname)"
+                    } else {
+                        welcomeLabel.text = "Добро пожаловать, \(nickname)"
+                    }
+                    let imgURL = "https://getbeat.ru" + photoRecURL
+                    photoImageView.lazyDownloadImage(link: imgURL) // какие-то варны непонятные
                 }
-                defaults.setValue(username, forKey: "username")
-                defaults.setValue(password, forKey: "password")
             } else {
-                print("USER SETUP AFTER LOGIN: \(user)")
                 // СОЗДАТЬ ОТДЕЛЬНУЮ МОДЕЛЬ ДЛЯ ЮЗЕРА ВОЗВРАЩАЕМОГО БЭКОМ GETBEAT!!!
                 if let firstname = user.firstName, let lastname = user.lastName, let photoRecUrl = user.photoRec {
                     welcomeLabel.text = "Добро пожаловать, \(firstname) \(lastname)"
-                    photoImageView.alpha = 1
                     photoImageView.lazyDownloadImage(link: photoRecUrl)
                 }
             }
+            
+            // оформим список купленных треков
+            if let buyTracks = user.buyTracks {
+                currentPurchase = buyTracks
+                purchaseButton.setTitle("Покупки (\(buyTracks.count))", for: .normal)
+            } else {
+                currentPurchase = []
+                purchaseButton.setTitle("Покупки (0)", for: .normal)
+            }
+            
         } else {
+            setupElements(state: false)
             errorLabel.alpha = 1
             errorLabel.text = "Неверный логин или пароль"
         }

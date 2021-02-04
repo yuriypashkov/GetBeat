@@ -92,7 +92,7 @@ class NetworkModel {
         dataTask.resume()
     }
     
-    func login(queryData: [String: String], onResult: @escaping (Result<User, Error>) -> Void) {
+    func login(queryData: [String: String], onResult: @escaping (Result<VKUser, Error>) -> Void) {
         let session = URLSession.shared
         let url = URL(string: "https://getbeat.ru/lib/loginByEmail.php")!
         var urlRequest = URLRequest(url: url)
@@ -125,7 +125,7 @@ class NetworkModel {
             //print(response.statusCode)
             
             do {
-                let user = try JSONDecoder().decode(User.self, from: data)
+                let user = try JSONDecoder().decode(VKUser.self, from: data)
                 onResult(.success(user))
             }
             catch (let error) {

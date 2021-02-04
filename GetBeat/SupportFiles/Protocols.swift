@@ -15,6 +15,11 @@ protocol HotTracksPageControllerDelegate: class {
     //func setCurrentTrack(track: Track)
 }
 
+protocol VKLoginProtocol {
+    func setupAfterLogin(state: Bool, user: VKUser, isEmailLogin: Bool)
+    func setupElements(state: Bool)
+}
+
 enum PickerEnum: Int {
     case mood
     case genre

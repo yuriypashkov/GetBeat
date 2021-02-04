@@ -14,6 +14,16 @@ class CustomActivityIndicator: UIView {
     let circle3 = UIView()
     var circleArray: [UIView] = []
     
+//    override var alpha: CGFloat {
+//        didSet {
+//            if alpha == 0.0 {
+//                stopped = true
+//            } else {
+//                animate()
+//            }
+//        }
+//    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
