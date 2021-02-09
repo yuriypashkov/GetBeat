@@ -44,8 +44,14 @@ extension UITextField {
     }
 
     // Default actions:
-    @objc func doneButtonTapped() { self.resignFirstResponder() }
-    @objc func cancelButtonTapped() { self.resignFirstResponder() }
+    @objc func doneButtonTapped() {
+        self.resignFirstResponder()
+        //self.endEditing(true)
+    }
+    @objc func cancelButtonTapped() {
+        self.resignFirstResponder()
+        self.text = "0"
+    }
 }
 
 // переводим секунды в String для лейблов начало и конец трека

@@ -47,7 +47,7 @@ class ContextMenuViewController: UIViewController {
         }
     }
     
-    func createLabel(x: CGFloat, y: CGFloat, tag: String) -> PaddingLabel {
+    private func createLabel(x: CGFloat, y: CGFloat, tag: String) -> PaddingLabel {
         let textLabel = PaddingLabel()
         textLabel.layer.cornerRadius = 8
         textLabel.clipsToBounds = true

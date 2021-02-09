@@ -24,15 +24,7 @@ class HorizontalScrollCell: UITableViewCell {
     
 }
 
-extension HorizontalScrollCell: HotTracksPageControllerDelegate { //}, UICollectionViewDelegate {
-    
-//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-//        if let currentTrack = currentTrackInScrollView {
-//            return ContextMenuModel.createMenu(currentTrack: currentTrack)
-//        } else {
-//            return nil
-//        }
-//    }
+extension HorizontalScrollCell: HotTracksPageControllerDelegate {
 
     func setNumberOfPages(numberOfPages: Int) {
         pageControlView.subviews.forEach { $0.removeFromSuperview() }
@@ -52,9 +44,5 @@ extension HorizontalScrollCell: HotTracksPageControllerDelegate { //}, UICollect
             pageControlView.subviews[i].backgroundColor = (index == i) ? .systemPink : .systemGray
         }
     }
-//    
-//    func setCurrentTrack(track: Track) {
-//        currentTrackInScrollView = track
-//    }
 
 }

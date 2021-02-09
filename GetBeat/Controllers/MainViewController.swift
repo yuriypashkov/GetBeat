@@ -74,7 +74,8 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+        customActivityIndicator.stopAnimate()
+        customActivityIndicator.removeFromSuperview()
 
     }
     
@@ -89,9 +90,7 @@ class MainViewController: UIViewController, FilterDelegate {
         playingView.setViewOnDefault()
         
         NotificationCenter.default.removeObserver(self)
-        
-        customActivityIndicator.stopAnimate()
-        customActivityIndicator.removeFromSuperview()
+    
     }
     
     // MARK: - AVPlayer Methods
@@ -152,8 +151,10 @@ class MainViewController: UIViewController, FilterDelegate {
         networkModel.getTracks(queryItems: queryItems) { (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let tempArray):
-                    self.tracks = tempArray
+                //case .success(let tempArray):
+                case .success(let tempTuple):
+                    self.tracks = tempTuple.0
+                    print(tempTuple.1)
                     self.reloadDataInAllTracksArray()
                 case .failure:
                     self.tracks = []
@@ -180,8 +181,8 @@ class MainViewController: UIViewController, FilterDelegate {
         networkModel.getTracks(queryItems: lazyQueryItems) { (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let tempArray):
-                    self.tracks.append(contentsOf: tempArray)
+                case .success(let tempTuple):
+                    self.tracks.append(contentsOf: tempTuple.0)
                     self.reloadDataInAllTracksArray()
         
                     if let tempIndexPath = self.tempIndexPath {
@@ -290,7 +291,6 @@ class MainViewController: UIViewController, FilterDelegate {
     @IBAction func searchButtonTap(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
-            //navigationController?.pushViewController(searchViewController, animated: true)
             searchViewController.modalPresentationStyle = .fullScreen
             present(searchViewController, animated: true, completion: nil)
         }
@@ -391,6 +391,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TrackCell") as! TrackCell
             cell.setCell(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
+            //print(allTracksInTable[indexPath.section][indexPath.row].duration)
             return cell
         }
     }

@@ -148,7 +148,7 @@
                                                                             <constraint firstAttribute="width" constant="136" id="Q7R-Og-M2m"/>
                                                                             <constraint firstAttribute="height" constant="30" id="uWF-Bp-5BI"/>
                                                                         </constraints>
-                                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="15"/>
+                                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="14"/>
                                                                         <state key="normal" title="КУПИТЬ">
                                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
@@ -180,6 +180,7 @@
                                                             <connections>
                                                                 <outlet property="authorLabel" destination="mfq-Jc-Vgr" id="7al-AG-4EV"/>
                                                                 <outlet property="backgroundImage" destination="YDx-1k-CoA" id="hJo-SI-nrS"/>
+                                                                <outlet property="buttonBuy" destination="ebY-Sp-VJe" id="uTZ-Gq-3pY"/>
                                                                 <outlet property="trackNameLabel" destination="NaW-FN-BYa" id="8Rc-Dr-F4S"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -227,9 +228,9 @@
                             </imageView>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urg-Tx-zif">
                                 <rect key="frame" x="32" y="474" width="350" height="29"/>
-                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="14"/>
                                 <state key="normal" title="Попробовать снова">
-                                    <color key="titleColor" systemColor="systemBackgroundColor"/>
+                                    <color key="titleColor" systemColor="systemOrangeColor"/>
                                 </state>
                                 <connections>
                                     <action selector="reloadDataTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7A6-Nm-a3B"/>
@@ -984,10 +985,10 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K1u-bd-73c" userLabel="MainSubview">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="780"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="844"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqj-yw-Oun" userLabel="MoodView">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="64" width="414" height="60"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Настроение:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8vd-hf-ewu">
                                                         <rect key="frame" x="16" y="20.5" width="94.5" height="19"/>
@@ -1006,7 +1007,7 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstItem="Wst-eZ-RE7" firstAttribute="centerY" secondItem="Oqj-yw-Oun" secondAttribute="centerY" id="4iF-Ds-FDt"/>
                                                     <constraint firstAttribute="trailing" secondItem="Wst-eZ-RE7" secondAttribute="trailing" constant="16" id="b1r-b6-6Sb"/>
@@ -1016,7 +1017,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yv2-6m-0m2" userLabel="GenreView">
-                                                <rect key="frame" x="0.0" y="60" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="124" width="414" height="60"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Жанр:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjs-tI-2Ss">
                                                         <rect key="frame" x="16" y="20.5" width="46.5" height="19"/>
@@ -1045,7 +1046,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ema-36-69y" userLabel="KeyView">
-                                                <rect key="frame" x="0.0" y="120" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="184" width="414" height="60"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Тональность:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5I-eT-QzV">
                                                         <rect key="frame" x="16" y="20.5" width="101" height="19"/>
@@ -1074,7 +1075,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kld-ZN-rtQ" userLabel="ButtonsView">
-                                                <rect key="frame" x="0.0" y="720" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="784" width="414" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="cEb-we-v8H" userLabel="Buttons">
                                                         <rect key="frame" x="16" y="16" width="382" height="28"/>
@@ -1112,10 +1113,13 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ijA-Dv-IIh" userLabel="SwitchNewView">
-                                                <rect key="frame" x="0.0" y="180" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="244" width="414" height="60"/>
                                                 <subviews>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="R1R-7t-sK3" userLabel="SwitchNew">
                                                         <rect key="frame" x="349" y="14.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="switchHookOrNewTap:" destination="jPm-DK-ypi" eventType="valueChanged" id="95D-RB-HWp"/>
+                                                        </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сначала новые" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ahn-hi-LPN">
                                                         <rect key="frame" x="16" y="20.5" width="116.5" height="19"/>
@@ -1134,10 +1138,13 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jh4-kd-kgi" userLabel="SwitchHookView">
-                                                <rect key="frame" x="0.0" y="240" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="304" width="414" height="60"/>
                                                 <subviews>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wvh-nZ-1HO" userLabel="SwitchHook">
                                                         <rect key="frame" x="349" y="14.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="switchHookOrNewTap:" destination="jPm-DK-ypi" eventType="valueChanged" id="9FI-oj-KbS"/>
+                                                        </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="С готовым припевом" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QcW-Ok-M83">
                                                         <rect key="frame" x="16" y="20.5" width="160.5" height="19"/>
@@ -1156,7 +1163,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ioE-Wv-FjP" userLabel="EnergyView">
-                                                <rect key="frame" x="0.0" y="300" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="364" width="414" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SfG-9f-XQs" userLabel="EnergyStackView">
                                                         <rect key="frame" x="16" y="15" width="382" height="30"/>
@@ -1192,12 +1199,12 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vBj-SJ-vMU" userLabel="TempView">
-                                                <rect key="frame" x="0.0" y="360" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="424" width="414" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="a9c-jA-1W1" userLabel="TempStackView">
                                                         <rect key="frame" x="16" y="15" width="382" height="30"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Темп 40 - 250 Bpm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JzL-Ey-guK">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Темп 40 - 250 BPM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JzL-Ey-guK">
                                                                 <rect key="frame" x="0.0" y="0.0" width="191" height="30"/>
                                                                 <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1222,19 +1229,19 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="em0-qf-54O" userLabel="BpmCountView">
-                                                <rect key="frame" x="0.0" y="420" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="484" width="414" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Fsl-0s-p2Y" userLabel="BpmCountStackView">
                                                         <rect key="frame" x="16" y="14.5" width="382" height="31"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Точное значение Bpm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccX-yJ-d3y">
-                                                                <rect key="frame" x="0.0" y="0.0" width="164.5" height="31"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Точное значение BPM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccX-yJ-d3y">
+                                                                <rect key="frame" x="0.0" y="0.0" width="166" height="31"/>
                                                                 <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="48M-kH-gbZ" userLabel="bpmCountTextField">
-                                                                <rect key="frame" x="194.5" y="0.0" width="108.5" height="31"/>
+                                                                <rect key="frame" x="196" y="0.0" width="107" height="31"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                             </textField>
@@ -1256,7 +1263,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zp6-cX-tqN" userLabel="PriceView">
-                                                <rect key="frame" x="0.0" y="480" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="544" width="414" height="60"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="pug-qU-RBM" userLabel="PriceStackView">
                                                         <rect key="frame" x="16" y="15" width="382" height="30"/>
@@ -1286,7 +1293,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8lI-EU-VMj" userLabel="LicenseView">
-                                                <rect key="frame" x="0.0" y="540" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="604" width="414" height="60"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Тип лицензии:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LC5-Ft-YlP">
                                                         <rect key="frame" x="16" y="20.5" width="108" height="19"/>
@@ -1315,7 +1322,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qhI-SL-lCv" userLabel="FreeTracksView">
-                                                <rect key="frame" x="0.0" y="600" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="664" width="414" height="60"/>
                                                 <subviews>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="mgd-n1-996">
                                                         <rect key="frame" x="349" y="14.5" width="51" height="31"/>
@@ -1340,7 +1347,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pcn-Uo-yIu" userLabel="PaidTracksView">
-                                                <rect key="frame" x="0.0" y="660" width="414" height="60"/>
+                                                <rect key="frame" x="0.0" y="724" width="414" height="60"/>
                                                 <subviews>
                                                     <switch opaque="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="9W0-MU-qpR">
                                                         <rect key="frame" x="349" y="14.5" width="51" height="31"/>
@@ -1364,17 +1371,35 @@
                                                     <constraint firstItem="32f-yG-5E3" firstAttribute="centerY" secondItem="Pcn-Uo-yIu" secondAttribute="centerY" id="v6I-ZV-X4U"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Найдётся вариантов:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dgG-3q-9fJ">
+                                                <rect key="frame" x="0.0" y="41" width="414" height="19"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xmR-6W-uP9">
+                                                <rect key="frame" x="332" y="4" width="66" height="33"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
+                                                <state key="normal" title="Закрыть">
+                                                    <color key="titleColor" systemColor="systemOrangeColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="closeButtonTap:" destination="jPm-DK-ypi" eventType="touchUpInside" id="wPD-4J-3Ad"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="Ema-36-69y" firstAttribute="top" secondItem="Yv2-6m-0m2" secondAttribute="bottom" id="0Ko-7R-EQV"/>
                                             <constraint firstItem="Zp6-cX-tqN" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="27g-la-Ggk"/>
+                                            <constraint firstItem="dgG-3q-9fJ" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="3Er-rY-Fwc"/>
                                             <constraint firstAttribute="trailing" secondItem="kld-ZN-rtQ" secondAttribute="trailing" id="53D-TV-Reg"/>
                                             <constraint firstItem="Jh4-kd-kgi" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="5Re-v4-6nM"/>
                                             <constraint firstAttribute="trailing" secondItem="qhI-SL-lCv" secondAttribute="trailing" id="6Zj-f2-sfg"/>
                                             <constraint firstItem="Pcn-Uo-yIu" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="7XN-KS-BoS"/>
                                             <constraint firstItem="Pcn-Uo-yIu" firstAttribute="top" secondItem="qhI-SL-lCv" secondAttribute="bottom" id="8om-C1-ssg"/>
                                             <constraint firstItem="kld-ZN-rtQ" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="9N9-bq-HbH"/>
+                                            <constraint firstAttribute="trailing" secondItem="dgG-3q-9fJ" secondAttribute="trailing" id="9mP-RA-ahq"/>
                                             <constraint firstItem="Ema-36-69y" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="9sU-O6-I8d"/>
                                             <constraint firstItem="em0-qf-54O" firstAttribute="top" secondItem="vBj-SJ-vMU" secondAttribute="bottom" id="BHw-e3-E1o"/>
                                             <constraint firstItem="ijA-Dv-IIh" firstAttribute="top" secondItem="Ema-36-69y" secondAttribute="bottom" id="C9j-tq-dy0"/>
@@ -1387,19 +1412,23 @@
                                             <constraint firstItem="em0-qf-54O" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="Mvf-6t-ugu"/>
                                             <constraint firstAttribute="trailing" secondItem="em0-qf-54O" secondAttribute="trailing" id="Ntu-b7-OZw"/>
                                             <constraint firstItem="qhI-SL-lCv" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="RFd-Qs-P95"/>
+                                            <constraint firstItem="xmR-6W-uP9" firstAttribute="top" secondItem="K1u-bd-73c" secondAttribute="top" constant="4" id="Tc0-lY-fq1"/>
                                             <constraint firstItem="ijA-Dv-IIh" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="WxQ-YL-hB7"/>
                                             <constraint firstItem="Zp6-cX-tqN" firstAttribute="top" secondItem="em0-qf-54O" secondAttribute="bottom" id="XAm-sG-kcZ"/>
                                             <constraint firstItem="Oqj-yw-Oun" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="XEm-Gn-Tev"/>
+                                            <constraint firstItem="dgG-3q-9fJ" firstAttribute="top" secondItem="xmR-6W-uP9" secondAttribute="bottom" constant="4" id="XGK-Wd-xNH"/>
                                             <constraint firstItem="8lI-EU-VMj" firstAttribute="top" secondItem="Zp6-cX-tqN" secondAttribute="bottom" id="XJf-iM-nRy"/>
                                             <constraint firstItem="vBj-SJ-vMU" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="Z1E-Ai-nQT"/>
                                             <constraint firstAttribute="bottom" secondItem="kld-ZN-rtQ" secondAttribute="bottom" id="bNf-Uf-WUz"/>
                                             <constraint firstItem="vBj-SJ-vMU" firstAttribute="top" secondItem="ioE-Wv-FjP" secondAttribute="bottom" id="bhj-Fr-L2J"/>
                                             <constraint firstAttribute="trailing" secondItem="ioE-Wv-FjP" secondAttribute="trailing" id="cTw-Ud-qgA"/>
                                             <constraint firstItem="Jh4-kd-kgi" firstAttribute="top" secondItem="ijA-Dv-IIh" secondAttribute="bottom" id="e4L-8F-bkQ"/>
+                                            <constraint firstItem="Oqj-yw-Oun" firstAttribute="top" secondItem="dgG-3q-9fJ" secondAttribute="bottom" constant="4" id="e5K-TX-taU"/>
                                             <constraint firstAttribute="trailing" secondItem="Oqj-yw-Oun" secondAttribute="trailing" id="gKQ-BF-XGt"/>
                                             <constraint firstItem="Yv2-6m-0m2" firstAttribute="top" secondItem="Oqj-yw-Oun" secondAttribute="bottom" id="gkE-Zw-7Mo"/>
                                             <constraint firstAttribute="trailing" secondItem="ijA-Dv-IIh" secondAttribute="trailing" id="iKQ-eF-vCc"/>
-                                            <constraint firstItem="Oqj-yw-Oun" firstAttribute="top" secondItem="K1u-bd-73c" secondAttribute="top" id="nrl-gX-AzJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="xmR-6W-uP9" secondAttribute="trailing" constant="16" id="nip-r6-4CO"/>
+                                            <constraint firstItem="Oqj-yw-Oun" firstAttribute="top" secondItem="K1u-bd-73c" secondAttribute="top" constant="64" id="nrl-gX-AzJ"/>
                                             <constraint firstAttribute="trailing" secondItem="8lI-EU-VMj" secondAttribute="trailing" id="rpq-mS-PlR"/>
                                             <constraint firstItem="8lI-EU-VMj" firstAttribute="leading" secondItem="K1u-bd-73c" secondAttribute="leading" id="sBG-Ks-Vwj"/>
                                             <constraint firstAttribute="trailing" secondItem="Jh4-kd-kgi" secondAttribute="trailing" id="uHY-gB-YSA"/>
@@ -1441,6 +1470,7 @@
                         <outlet property="hookSwitch" destination="wvh-nZ-1HO" id="xS1-W8-Ems"/>
                         <outlet property="newFirstSwitch" destination="R1R-7t-sK3" id="pf4-xR-L0P"/>
                         <outlet property="paidTracksSwitch" destination="9W0-MU-qpR" id="SkT-zF-RbI"/>
+                        <outlet property="searchLabel" destination="dgG-3q-9fJ" id="R17-BP-7EM"/>
                         <outlet property="tempoLabel" destination="JzL-Ey-guK" id="yCA-CU-Fry"/>
                         <outlet property="tempoSlider" destination="140-Df-2G2" id="1q3-KC-21K"/>
                         <outlet property="tempoView" destination="vBj-SJ-vMU" id="Id4-XU-bdX"/>
@@ -1452,7 +1482,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PbO-Eg-DcV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="897" y="-561"/>
+            <point key="canvasLocation" x="895.6521739130435" y="-561.16071428571422"/>
         </scene>
         <!--Picker View Controller-->
         <scene sceneID="e5g-m6-O8O">
@@ -1541,21 +1571,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cTd-rr-pYm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1719" y="-561"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="acl-bU-0AZ">
-            <objects>
-                <viewController id="7NF-R7-XND" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="PWi-Rx-8MV">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="PDk-uX-Dp6"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oZ8-6S-eV3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1754" y="185"/>
         </scene>
     </scenes>
     <resources>

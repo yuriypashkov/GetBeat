@@ -15,6 +15,7 @@ struct VKUser: Decodable {
     // getBeat's user attributes
     var hash: String?
     var buyTracks: [BuyTrack]?
+    var favTracks: [String]?
     
     
     enum CodingKeys: String, CodingKey {
@@ -29,6 +30,7 @@ struct VKUser: Decodable {
         case hash
         case photo_200
         case buyTracks
+        case favTracks
     }
     
     init(from decoder: Decoder) throws {
@@ -43,6 +45,7 @@ struct VKUser: Decodable {
         self.photoRec = try? container.decode(String.self, forKey: .photo_rec)
         self.hash = try? container.decode(String.self, forKey: .hash)
         self.buyTracks = try? container.decode([BuyTrack].self, forKey: .buyTracks)
+        self.favTracks = try? container.decode([String].self, forKey: .favTracks)
     }
 }
 

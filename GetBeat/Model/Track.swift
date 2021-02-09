@@ -17,17 +17,19 @@ struct Track: Decodable {
     var realName: String?
     var free: String?
     var hook: String? // припев Да или Нет
+    var duration: String?
+    var priceLicense: String?
     
     var authorName: String {
         if let realName = self.realName {
-            let array = realName.components(separatedBy: "-")
+            let array = realName.components(separatedBy: " - ")
             if array.count >= 2 {
-                return array[0]
+                return array[0] + " "
             } else {
-                return "Unknown"
+                return "Unknown artist "
             }
         } else {
-            return "Unknown"
+            return "Unknown artist "
         }
     }
     
@@ -59,7 +61,7 @@ struct Track: Decodable {
                 return realName
             }
         } else {
-            return "Unknown"
+            return "Unknown track "
         }
     }
     
@@ -71,17 +73,6 @@ struct Track: Decodable {
         }
     }
     
-    //private var assetDurationInSeconds: Float64?
-    
-//    private var assetDuration: CMTime? {
-//        if let previewURL = previewUrl {
-//            guard let url = URL(string: previewURL) else { return nil }
-//            let asset = AVURLAsset(url: url, options: nil)
-//            let audioDuration = asset.duration
-//            return audioDuration
-//        }
-//        return nil
-//    }
     
     
     var durationInString: String? {
@@ -139,11 +130,28 @@ enum Price: Codable {
 
 }
 
+// парсим количество получаемых треков, бэк возвращает его в очень странном виде, поэтому так
+struct TracksCount: Decodable {
+    var count: String?
+    
+    private enum CodingKeys : String, CodingKey {
+        case count = "0"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.count = try? container.decode(String.self, forKey: .count)
+    }
+    
+}
+
 struct TracksResponse: Decodable {
     let tracks: [Track]
+    let countModel: TracksCount
     
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         tracks = try container.decode([Track].self)
+        countModel = try container.decode(TracksCount.self)
     }
 }

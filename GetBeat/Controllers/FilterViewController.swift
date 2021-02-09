@@ -3,12 +3,16 @@ import UIKit
 
 class FilterViewController: UIViewController, PickerDelegate {
     
+    let networkModel = NetworkModel()
+    let searchActivityIndicator = UIActivityIndicatorView()
+    
     @IBOutlet weak var tempoView: UIView!
     
     // MARK: Sliders outlets and methods - begin
     @IBOutlet weak var energySlider: UISlider!
     @IBOutlet weak var tempoSlider: UISlider!
     @IBOutlet weak var coastSlider: UISlider!
+    @IBOutlet weak var searchLabel: UILabel!
     
     
     @IBAction func coastSliderValueChanged(_ sender: UISlider) {
@@ -29,30 +33,33 @@ class FilterViewController: UIViewController, PickerDelegate {
         default: ()
         }
         coastSlider.setValue(Float(newValue), animated: true)
+        getTracksCount()
     }
     
     @IBAction func energySliderValueChanged(_ sender: UISlider) {
         energySlider.setValue(Float(sender.value.rounded()), animated: true)
+        getTracksCount()
     }
     
     @IBAction func tempoSliderValueChanged(_ sender: UISlider) {
         let newValue = sender.value.rounded()
         switch newValue {
         case 0:
-            tempoLabel.text = "Темп 40 - 250 Bpm"
+            tempoLabel.text = "Темп 40 - 250 BPM"
         case 1:
-            tempoLabel.text = "Темп 40 - 82 Bpm"
+            tempoLabel.text = "Темп 40 - 82 BPM"
         case 2:
             tempoLabel.text = "Темп 82 - 124 Bpm"
         case 3:
-            tempoLabel.text = "Темп 124 - 166 Bpm"
+            tempoLabel.text = "Темп 124 - 166 BPM"
         case 4:
-            tempoLabel.text = "Темп 166 - 208 Bpm"
+            tempoLabel.text = "Темп 166 - 208 BPM"
         case 5:
-            tempoLabel.text = "Темп 208 - 250 Bpm"
+            tempoLabel.text = "Темп 208 - 250 BPM"
         default: ()
         }
         tempoSlider.setValue(Float(newValue), animated: true)
+        getTracksCount()
     }
     
     // MARK: Sliders and methods - end
@@ -63,6 +70,11 @@ class FilterViewController: UIViewController, PickerDelegate {
     @IBOutlet weak var paidTracksSwitch: UISwitch!
     @IBOutlet weak var freeTracksSwitch: UISwitch!
     
+    
+    @IBAction func switchHookOrNewTap(_ sender: UISwitch) {
+        getTracksCount()
+    }
+    
     @IBAction func freeOrPaidSwitchTap(_ sender: UISwitch) {
         switch sender.tag {
         case 0:
@@ -71,6 +83,7 @@ class FilterViewController: UIViewController, PickerDelegate {
             if freeTracksSwitch.isOn { freeTracksSwitch.isOn = false }
         default: ()
         }
+        getTracksCount()
     }
     
     
@@ -117,6 +130,8 @@ class FilterViewController: UIViewController, PickerDelegate {
         case .license:
             licenseValue = String(valueIndex - 1)
         }
+        
+        getTracksCount()
     }
     
     // MARK: Установка состояния фильтров после перехода с майн-вью
@@ -152,7 +167,26 @@ class FilterViewController: UIViewController, PickerDelegate {
         super.viewDidLoad()
         // imho очень странный момент с моделью установки фильтров, но VC разгрузился
         filterStateModel = FilterStateModel(controller: self)
+        // ловим окончание редактирования textfield
+        bpmCountTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingDidEnd)
+        // set indicator view
+        searchActivityIndicator.hidesWhenStopped = true
+        searchActivityIndicator.center = searchLabel.center
+        searchActivityIndicator.color = .white
+        searchActivityIndicator.style = .medium
+        view.addSubview(searchActivityIndicator)
     }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        //print("DID END EDITING")
+        getTracksCount()
+    }
+    
+    // закрыть окно
+    @IBAction func closeButtonTap(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     
     // открываем пикервью с нужными данными
     @IBAction func buttonToPickerTap(_ sender: UIButton) {
@@ -200,6 +234,44 @@ class FilterViewController: UIViewController, PickerDelegate {
     // тап по кнопке Сбросить
     @IBAction func clearFiltersButtonTap(_ sender: UIButton) {
         filterStateModel?.setDefaults(controller: self)
+        searchLabel.text = "Найдётся вариантов:"
+    }
+    
+    // метод для получения количества треков после применения какого-то из фильтров на VC
+    func getTracksCount() {
+        searchActivityIndicator.startAnimating()
+        searchLabel.alpha = 0
+        let filterDictionary = [
+            "emotions": moodValue, "ganre": genreValue, "key": keyValue,
+            "newFirst": "\(newFirstSwitch.isOn)", "hook": "\(hookSwitch.isOn)",
+            "energy": "\(Int(energySlider.value))", "temp": "\(Int(tempoSlider.value))",
+            "currBpmStatus": "\(bpmCountSwitch.isOn)", "currBpm": bpmCountTextField.text ?? "0",
+            "coast": "\(Int(coastSlider.value))", "typeLicense": licenseValue,
+            "getFreeStatus": "\(freeTracksSwitch.isOn)", "getPaidStatus": "\(paidTracksSwitch.isOn)"
+        ]
+        var queryItems: [URLQueryItem] = []
+        
+        for filterAttribute in filterDictionary {
+            if let attributeValue = filterAttribute.value {
+                queryItems.append(URLQueryItem(name: filterAttribute.key, value: attributeValue))
+            }
+        }
+        
+        networkModel.getTracks(queryItems: queryItems) { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tempTuple):
+                    if let count = tempTuple.1 {
+                        self.searchLabel.text = "Найдётся вариантов: " + count
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+                self.searchActivityIndicator.stopAnimating()
+                self.searchLabel.alpha = 1
+            }
+        }
+        
     }
     
 }

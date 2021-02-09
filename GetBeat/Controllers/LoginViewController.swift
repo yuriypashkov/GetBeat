@@ -6,7 +6,8 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
 
     // MARK: Attributes
     let networkModel = NetworkModel()
-    let customActivityIndicator = CustomActivityIndicator()
+    //let customActivityIndicator = CustomActivityIndicator()
+    let activityIndicatorView = UIActivityIndicatorView()
     let defaults = UserDefaults.standard
     let vkLoginClient = VKLoginClient()
     var currentPurchase: [BuyTrack] = []
@@ -27,8 +28,8 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
     // MARK: IBOutlets Actions
     @IBAction func vkButtonTap(_ sender: UIButton) {
         // можно попробовать релизовать нормально модель: здесь делать видимой вторую кнопку с надписью Войти и уже по тапу на нее вызывать метод из модели, который вернет JSON от гетбит
-        setupElements(state: true)
-        logoutButton.alpha = 0
+        //setupElements(state: true)
+        //logoutButton.alpha = 0
         vkLoginClient.showPermissions()
     }
     
@@ -79,8 +80,8 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
     
     // ПРОДУМАТЬ МОМЕНТ ВОЗВРАЩЕНИЯ IndicatorView
     override func viewWillDisappear(_ animated: Bool) {
-        customActivityIndicator.stopAnimate()
-        customActivityIndicator.removeFromSuperview()
+        //customActivityIndicator.stopAnimate()
+        //customActivityIndicator.removeFromSuperview()
     }
         
     override func viewDidLoad() {
@@ -90,10 +91,13 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
         logoutButton.alpha = 0
         
         // set indicator view
-        customActivityIndicator.center = CGPoint(x: view.frame.size.width / 2 - 70, y: view.frame.size.height / 2)
-        customActivityIndicator.animate()
-        customActivityIndicator.alpha = 1
-        view.addSubview(customActivityIndicator)
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .medium
+        activityIndicatorView.color = .white
+        activityIndicatorView.startAnimating()
+        view.addSubview(activityIndicatorView)
+
         
         vkLoginClient.delegate = self
         usernameTextField.delegate = self
@@ -117,7 +121,8 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
                 vkLoginClient.userVKid = "\(userID)"
                 vkLoginAttemption()
             } else {
-                customActivityIndicator.alpha = 0
+                //customActivityIndicator.alpha = 0
+                activityIndicatorView.stopAnimating()
                 setupElements(state: false)
             }
         
@@ -160,7 +165,8 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
     }
     
     func emailLoginAttemption(username: String, password: String) {
-        customActivityIndicator.alpha = 1.0
+        //customActivityIndicator.alpha = 1.0
+        activityIndicatorView.startAnimating()
         passwordTextField.text = password
         usernameTextField.text = username
 
@@ -174,6 +180,7 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
                     switch result {
                     case .success(let user):
                         if let login = user.login {
+                            //print(user)
                             if login {
                                 self.defaults.setValue(username, forKey: "username")
                                 self.defaults.setValue(password, forKey: "password")
@@ -185,13 +192,15 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
                         self.errorLabel.alpha = 1
                         self.errorLabel.text = "Произошла ошибка"
                     }
-                    self.customActivityIndicator.alpha = 0
+                    //self.customActivityIndicator.alpha = 0
+                    self.activityIndicatorView.stopAnimating()
                 }
             }
     }
     
     func setupAfterLogin(state: Bool, user: VKUser, isEmailLogin: Bool) {
-        customActivityIndicator.alpha = 0
+        //customActivityIndicator.alpha = 0
+        activityIndicatorView.stopAnimating()
         if state {
             setupElements(state: true)
             
