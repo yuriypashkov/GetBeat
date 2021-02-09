@@ -44,8 +44,14 @@ extension UITextField {
     }
 
     // Default actions:
-    @objc func doneButtonTapped() { self.resignFirstResponder() }
-    @objc func cancelButtonTapped() { self.resignFirstResponder() }
+    @objc func doneButtonTapped() {
+        self.resignFirstResponder()
+        //self.endEditing(true)
+    }
+    @objc func cancelButtonTapped() {
+        self.resignFirstResponder()
+        self.text = "0"
+    }
 }
 
 // переводим секунды в String для лейблов начало и конец трека
@@ -109,4 +115,24 @@ extension String {
             $0 + String(format: "%02x", digest[$1])
         }
     }
+}
+
+//padding label
+class PaddingLabel: UILabel {
+    var textInsets = UIEdgeInsets.zero {
+        didSet { invalidateIntrinsicContentSize() }
+    }
+
+    override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        let textRect = super.textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines)
+        let invertedInsets = UIEdgeInsets(top: -textInsets.top,
+                                          left: -textInsets.left,
+                                          bottom: -textInsets.bottom,
+                                          right: -textInsets.right)
+        return textRect.inset(by: invertedInsets)
+    }
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: textInsets))
+    } 
 }

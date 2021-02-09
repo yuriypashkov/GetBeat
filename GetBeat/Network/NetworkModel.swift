@@ -14,7 +14,7 @@ enum NetworkError: Error {
 
 class NetworkModel {
     
-    func getTracks(queryItems: [URLQueryItem], onResult: @escaping (Result<[Track], Error>) -> Void) {
+    func getTracks(queryItems: [URLQueryItem], onResult: @escaping (Result<([Track], String?), Error>) -> Void) {
         let session = URLSession.shared
         let url = URL(string: "https://getbeat.ru/lib/catalogSearchengine.php")!
         var urlRequest = URLRequest(url: url)
@@ -36,7 +36,7 @@ class NetworkModel {
             
             do {
                 let tracksResponse = try JSONDecoder().decode(TracksResponse.self, from: data)
-                onResult(.success(tracksResponse.tracks))
+                onResult(.success((tracksResponse.tracks, tracksResponse.countModel.count)))
             }
             catch (let error){
                 onResult(.failure(error))
@@ -92,7 +92,7 @@ class NetworkModel {
         dataTask.resume()
     }
     
-    func login(queryData: [String: String], onResult: @escaping (Result<User, Error>) -> Void) {
+    func login(queryData: [String: String], onResult: @escaping (Result<VKUser, Error>) -> Void) {
         let session = URLSession.shared
         let url = URL(string: "https://getbeat.ru/lib/loginByEmail.php")!
         var urlRequest = URLRequest(url: url)
@@ -125,7 +125,7 @@ class NetworkModel {
             //print(response.statusCode)
             
             do {
-                let user = try JSONDecoder().decode(User.self, from: data)
+                let user = try JSONDecoder().decode(VKUser.self, from: data)
                 onResult(.success(user))
             }
             catch (let error) {

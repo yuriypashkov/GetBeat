@@ -52,6 +52,10 @@ extension PickerViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         return pickerViewData[row]
     }
     
+//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+//        return NSAttributedString(string: pickerViewData[row], attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+//    }
+    
     
 }
 

@@ -14,6 +14,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
 
     
     // MARK: IB Outlets
+    @IBOutlet weak var trackImage: UIImageView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var authorNameLabel: UILabel!
     @IBOutlet weak var testLabel: UILabel!
@@ -22,7 +23,6 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     // MARK: IB Methods
     @IBAction func downloadButtonTap(_ sender: UIButton) {
         if track?.free == "0" {
-            print("BUY")
             guard let url = URL(string: "https://getbeat.ru/order") else { return }
             let svc = SFSafariViewController(url: url)
             window?.rootViewController?.present(svc, animated: true, completion: nil)
@@ -77,15 +77,41 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     }
     
     func setCell(currentTrack: Track) {
+        // BUG: был косяк с неотображающейся кнопкой, проверить
+       // cellButton.alpha = 1
         // очень слабый момент парсинга имени автора и названия трека, могут быть косяки
         trackNameLabel.text = currentTrack.trackName
-        authorNameLabel.text = currentTrack.authorName
+        authorNameLabel.text = currentTrack.authorName + "- 0:00"
         track = currentTrack
         
+//        DispatchQueue.main.async {
+//            print(currentTrack.durationInString ?? "0:00")
+//        }
+        
+        
+        cellButton.layer.cornerRadius = cellButton.bounds.width / 5
+        cellButton.layer.masksToBounds = true
+        trackImage.layer.cornerRadius = cellButton.bounds.width / 5
+        
         if currentTrack.free == "0" {
-            cellButton.setImage(UIImage(named: "cart50px"), for: .normal)
+            cellButton.imageEdgeInsets.left = -3
+            cellButton.setImage(UIImage(named: "cart"), for: .normal)
+            cellButton.backgroundColor = .systemPink
+            if let price = currentTrack.price {
+                var title = ""
+                switch price {
+                case .int(let value):
+                    title = "\(value)₽"
+                case .string(let value):
+                    title = value + "₽"
+                }
+                cellButton.setTitle(title, for: .normal)
+            }
         } else {
-            cellButton.setImage(UIImage(named: "download50px"), for: .normal)
+            cellButton.imageEdgeInsets.left = 0
+            cellButton.setImage(UIImage(named: "download36"), for: .normal)
+            cellButton.setTitle("", for: .normal)
+            cellButton.backgroundColor = .systemGreen
         }
     }
     
