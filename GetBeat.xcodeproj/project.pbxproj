@@ -40,6 +40,7 @@
 		2172A5DB25BA1C29000AC98E /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5D825BA1C29000AC98E /* Roboto-Medium.ttf */; };
 		2172A5DC25BA1C29000AC98E /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5D925BA1C29000AC98E /* Roboto-Bold.ttf */; };
 		2172A5DD25BA1C29000AC98E /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5DA25BA1C29000AC98E /* Roboto-Regular.ttf */; };
+		21C041AD25D2E87800E084DD /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C041AC25D2E87800E084DD /* WelcomeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		2172A5D825BA1C29000AC98E /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		2172A5D925BA1C29000AC98E /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		2172A5DA25BA1C29000AC98E /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		21C041AC25D2E87800E084DD /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				21148841257FAB660065C0C6 /* MainViewController.swift */,
+				21C041AC25D2E87800E084DD /* WelcomeViewController.swift */,
 				215945BC25CC7E4C009281F7 /* PurchaseViewController.swift */,
 				2117F3BF25BC3BE700C5F637 /* ContextMenuViewController.swift */,
 				21148867258293520065C0C6 /* FilterViewController.swift */,
@@ -282,6 +285,7 @@
 				211488712582CF600065C0C6 /* Extensions.swift in Sources */,
 				215945C025CC7F1E009281F7 /* PurchaseCell.swift in Sources */,
 				211C998A258A6A6E00962948 /* VKUser.swift in Sources */,
+				21C041AD25D2E87800E084DD /* WelcomeViewController.swift in Sources */,
 				2114887525843CA00065C0C6 /* SomeData.swift in Sources */,
 				215945B425CAE5E6009281F7 /* ContextMenuModel.swift in Sources */,
 				211C99802587C55800962948 /* SearchViewController.swift in Sources */,

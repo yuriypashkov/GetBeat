@@ -84,11 +84,6 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
         authorNameLabel.text = currentTrack.authorName + "- 0:00"
         track = currentTrack
         
-//        DispatchQueue.main.async {
-//            print(currentTrack.durationInString ?? "0:00")
-//        }
-        
-        
         cellButton.layer.cornerRadius = cellButton.bounds.width / 5
         cellButton.layer.masksToBounds = true
         trackImage.layer.cornerRadius = cellButton.bounds.width / 5

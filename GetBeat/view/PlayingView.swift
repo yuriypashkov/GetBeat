@@ -44,20 +44,9 @@ class PlayingView: UIView {
         let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(tapOnView))
         swipeUpGestureRecognizer.direction = .up
         self.addGestureRecognizer(swipeUpGestureRecognizer)
-        
-//        trackNameLabel = UILabel()
-//        trackNameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        trackNameLabel.textColor = .white
-//        trackNameLabel.font = UIFont.boldSystemFont(ofSize: 17)
-//        trackNameLabel.text = "TrackName"
         trackNameLabel = createLabel(textColor: .white, fontType: .bold, fontSize: 18, textAlignment: .left, text: "trackName")
         self.addSubview(trackNameLabel)
-        
-//        authorNameLabel = UILabel()
-//        authorNameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        authorNameLabel.textColor = .systemGray5
-//        authorNameLabel.font = UIFont.systemFont(ofSize: 15)
-//        authorNameLabel.text = "Author"
+ 
         authorNameLabel = createLabel(textColor: .systemGray5, fontType: .medium, fontSize: 16, textAlignment: .left, text: "authorName")
         self.addSubview(authorNameLabel)
         
@@ -65,7 +54,6 @@ class PlayingView: UIView {
         playPauseButton.backgroundColor = .label
         playPauseButton.layer.cornerRadius = 20
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
-        //playPauseButton.setImage(UIImage(named: "pause60px"), for: .normal)
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         playPauseButton.tintColor = .white
         self.addSubview(playPauseButton)
@@ -81,22 +69,9 @@ class PlayingView: UIView {
         self.addSubview(durationSlider)
         durationSlider.addTarget(self, action: #selector(didSliderChange(_:)), for: .valueChanged)
         
-//        beginTimeValueLabel = UILabel()
-//        beginTimeValueLabel.textAlignment = .center
-//        beginTimeValueLabel.translatesAutoresizingMaskIntoConstraints = false
-//        beginTimeValueLabel.textColor = .systemGray5
-//        beginTimeValueLabel.font = UIFont.systemFont(ofSize: 13)
-//        beginTimeValueLabel.text = "0:00"
-        //beginTimeValueLabel.backgroundColor = .red
         beginTimeValueLabel = createLabel(textColor: .systemGray5, fontType: .regular, fontSize: 13, textAlignment: .center, text: "0:00")
         self.addSubview(beginTimeValueLabel)
         
-//        endTimeValueLabel = UILabel()
-//        endTimeValueLabel.textAlignment = .center
-//        endTimeValueLabel.translatesAutoresizingMaskIntoConstraints = false
-//        endTimeValueLabel.textColor = .systemGray5
-//        endTimeValueLabel.font = UIFont.systemFont(ofSize: 13)
-//        endTimeValueLabel.text = "0:00"
         endTimeValueLabel = createLabel(textColor: .systemGray5, fontType: .regular, fontSize: 13, textAlignment: .center, text: "0:00")
         self.addSubview(endTimeValueLabel)
         

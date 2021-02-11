@@ -12,6 +12,8 @@ class MainViewController: UIViewController, FilterDelegate {
     var tracks: [Track] = []
     var networkModel = NetworkModel()
     
+    var showWelcomeViewController = true
+    
     weak var hotTracksProtocolDelegate: HotTracksPageControllerDelegate?
     var customActivityIndicator = CustomActivityIndicator()
     
@@ -59,6 +61,17 @@ class MainViewController: UIViewController, FilterDelegate {
         loadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        //show welcome controller
+        guard showWelcomeViewController else {return}
+        
+        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //let welcomeViewController = storyboard.instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
+        //present(welcomeViewController, animated: true, completion: nil)
+        
+        showWelcomeViewController = false
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
          return .lightContent
     }
@@ -94,13 +107,6 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     // MARK: - AVPlayer Methods
-//    public func disconnectAVPlayer() {
-//      MainViewController.player = nil
-//    }
-//
-//    public func reconnectAVPlayer() {
-//      MainViewController.player = player
-//    }
     
     func preloadMusicData(urlString: String) {
         let url = URL(string: urlString)
@@ -154,7 +160,7 @@ class MainViewController: UIViewController, FilterDelegate {
                 //case .success(let tempArray):
                 case .success(let tempTuple):
                     self.tracks = tempTuple.0
-                    print(tempTuple.1)
+                    //print(tempTuple.1)
                     self.reloadDataInAllTracksArray()
                 case .failure:
                     self.tracks = []
@@ -391,7 +397,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TrackCell") as! TrackCell
             cell.setCell(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
-            //print(allTracksInTable[indexPath.section][indexPath.row].duration)
             return cell
         }
     }
