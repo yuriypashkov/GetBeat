@@ -17,7 +17,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     @IBOutlet weak var trackImage: UIImageView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var authorNameLabel: UILabel!
-    @IBOutlet weak var testLabel: UILabel!
+    //@IBOutlet weak var testLabel: UILabel!
     @IBOutlet weak var cellButton: UIButton!
     
     // MARK: IB Methods
@@ -27,7 +27,14 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
             let svc = SFSafariViewController(url: url)
             window?.rootViewController?.present(svc, animated: true, completion: nil)
         } else {
-            if let urlString = track?.previewUrl, let filename = track?.realName {
+            if let urlString = track?.previewUrl, var filename = track?.realName {
+                if filename.contains("/") {
+                    for index in filename.indices {
+                        if filename[index] == "/" {
+                            filename.remove(at: index)
+                        }
+                    }
+                }
                 currentDownloadedFileName = filename
                 do {
                     let documentURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -81,7 +88,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
        // cellButton.alpha = 1
         // очень слабый момент парсинга имени автора и названия трека, могут быть косяки
         trackNameLabel.text = currentTrack.trackName
-        authorNameLabel.text = currentTrack.authorName + "- 0:00"
+        authorNameLabel.text = currentTrack.authorName + "- \(currentTrack.durationInString ?? "0:00")"
         track = currentTrack
         
         cellButton.layer.cornerRadius = cellButton.bounds.width / 5

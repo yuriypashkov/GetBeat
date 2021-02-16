@@ -14,6 +14,8 @@ class PlayingView: UIView {
     var beginTimeValueLabel: UILabel!
     var endTimeValueLabel: UILabel!
     
+    var activityIndicator = UIActivityIndicatorView()
+    
     private enum FontType: String {
         case regular = "Roboto-Regular"
         case bold = "Roboto-Bold"
@@ -33,7 +35,6 @@ class PlayingView: UIView {
     
     init(position: CGPoint, width: CGFloat, height: CGFloat) {
         super.init(frame: CGRect(x: position.x, y: position.y, width: width, height: height))
-        //self.backgroundColor = .systemGreen
         self.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 0.99)
         
         let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(tapOnView))
@@ -74,6 +75,13 @@ class PlayingView: UIView {
         
         endTimeValueLabel = createLabel(textColor: .systemGray5, fontType: .regular, fontSize: 13, textAlignment: .center, text: "0:00")
         self.addSubview(endTimeValueLabel)
+        
+        //set activity indicator
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .white
+        activityIndicator.center = CGPoint(x: width - 36, y: 36)
+        //activityIndicator.startAnimating()
+        self.addSubview(activityIndicator)
         
         let constraints = [
             trackNameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -142,6 +150,16 @@ class PlayingView: UIView {
         if let player = player {
             player.seek(to: CMTimeMakeWithSeconds(Float64(0), preferredTimescale: 1))
         }
+    }
+    
+    func startAnimating() {
+        activityIndicator.startAnimating()
+        playPauseButton.alpha = 0
+    }
+    
+    func stopAnimating() {
+        activityIndicator.stopAnimating()
+        playPauseButton.alpha = 1
     }
     
     required init?(coder: NSCoder) {

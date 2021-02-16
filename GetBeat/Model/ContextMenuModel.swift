@@ -24,7 +24,11 @@ class ContextMenuModel {
                 }
             }
             let actionFavorites = UIAction(title: "В избранное", image: UIImage(systemName: "star")) { (action) in
-                print("SOME FAVORITE")
+                if ApplicationAuth.isAuth {
+                    print("ADDING")
+                } else {
+                    print("YOU NEED AUTH")
+                }
             }
             return UIMenu.init(title: "", image: nil, identifier: nil, options: .destructive, children: [actionShare, actionFavorites])
         }

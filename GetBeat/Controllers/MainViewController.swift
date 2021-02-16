@@ -12,7 +12,7 @@ class MainViewController: UIViewController, FilterDelegate {
     var tracks: [Track] = []
     var networkModel = NetworkModel()
     
-    var showWelcomeViewController = true
+    var hideWelcomeViewController = false
     
     weak var hotTracksProtocolDelegate: HotTracksPageControllerDelegate?
     var customActivityIndicator = CustomActivityIndicator()
@@ -21,7 +21,6 @@ class MainViewController: UIViewController, FilterDelegate {
     let player = AVPlayer()
     var playerItem: AVPlayerItem?
     private var playingTrackObserver: Any?
-    private var loadingTrackObserver: Any?
     
     //array for query items
     var queryItems: [URLQueryItem] = []
@@ -41,11 +40,13 @@ class MainViewController: UIViewController, FilterDelegate {
             }
         }
     }
+    let defaults = UserDefaults.standard
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        hideWelcomeViewController = defaults.bool(forKey: "hideWelcomeViewController")
+        //print(showWelcomeViewController)
         if let tabBarHeight = tabBarController?.tabBar.frame.size.height, let window = UIApplication.shared.windows.first {
             // playingView
             let bottomInset = view.frame.size.height - tabBarHeight - window.safeAreaInsets.bottom - 75
@@ -63,13 +64,13 @@ class MainViewController: UIViewController, FilterDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         //show welcome controller
-        guard showWelcomeViewController else {return}
-        
-        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //let welcomeViewController = storyboard.instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
-        //present(welcomeViewController, animated: true, completion: nil)
-        
-        showWelcomeViewController = false
+        if !hideWelcomeViewController {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let welcomeViewController = storyboard.instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
+            present(welcomeViewController, animated: true, completion: nil)
+            hideWelcomeViewController = true
+            defaults.setValue(hideWelcomeViewController, forKey: "hideWelcomeViewController")
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -89,7 +90,6 @@ class MainViewController: UIViewController, FilterDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         customActivityIndicator.stopAnimate()
         customActivityIndicator.removeFromSuperview()
-
     }
     
     private func methodForDisappear() {
@@ -207,6 +207,7 @@ class MainViewController: UIViewController, FilterDelegate {
     
     // костыль для остановки текущего трека и воспроизведения следующего одним тапом
     var tempIndexPath: IndexPath?
+    var isAnimatingStoped = false
     
     func playTrack(indexPath: IndexPath) {
         // play music
@@ -222,13 +223,14 @@ class MainViewController: UIViewController, FilterDelegate {
             }
 
         } else {
-            guard let durationInSeconds = allTracksInTable[indexPath.section][indexPath.row].durationInSeconds, !durationInSeconds.isNaN else {
-                print("NaN in seconds")
+            guard let duration = allTracksInTable[indexPath.section][indexPath.row].duration else {
+                print("NONE DURATION")
                 return
             }
-
+            playingView.startAnimating()
             // если нажал на новую ячейку
             // принудительно уберем подсветку ячейки
+            
             if let tempIndexPath = tempIndexPath {
                 let cell = tableView.cellForRow(at: tempIndexPath)
                 cell?.contentView.backgroundColor = .clear
@@ -249,13 +251,20 @@ class MainViewController: UIViewController, FilterDelegate {
                 player.removeTimeObserver(pto)
                 playingTrackObserver = nil
             }
-
+    
             playingTrackObserver = player.addProgressObserver(action: { (progress) in
-                self.playingView.durationSlider.value = Float(progress * durationInSeconds)
+                //print(state)
+                //print("\(progress) : \(state)")
+                if progress > 0, !self.isAnimatingStoped {
+                    self.playingView.stopAnimating()
+                    self.isAnimatingStoped = true
+                    print("STOPPED")
+                } // слабый момент, выполняется каждую секунду проигрывания
+                self.playingView.durationSlider.value = Float(progress * duration)
                 self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
             })
 
-            playingView.durationSlider.maximumValue = Float(durationInSeconds) // на медленном соединении здесь значение NaN
+            playingView.durationSlider.maximumValue = Float(duration)
             playingView.durationSlider.value = 0
 
             player.play()
@@ -318,6 +327,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
     // MARK: CollectionView methods
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        isAnimatingStoped = false
         playTrack(indexPath: indexPath)
     }
     
@@ -403,6 +413,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // play music
+        isAnimatingStoped = false
         playTrack(indexPath: indexPath)
     }
     

@@ -69,15 +69,16 @@ extension Float {
     
 }
 
-// наблюдатель для двиганья ползунка трека
+// наблюдатель для двиганья ползунка трека CMTime.init(value: 1, timescale: 1)
 extension AVPlayer {
     
     func addProgressObserver(action: @escaping ((Double) -> Void)) -> Any {
-        return self.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: .main, using: { [weak self] time in
+        return self.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.2, preferredTimescale: .max), queue: .main, using: { [weak self] time in
             if let duration = self?.currentItem?.duration {
                 let duration = CMTimeGetSeconds(duration), time = CMTimeGetSeconds(time)
                 let progress = (time/duration)
-                action(progress)
+                //let state: Bool = (time == 0)
+                action(progress)//, state)
             }
         })
     }
