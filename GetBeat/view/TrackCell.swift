@@ -25,7 +25,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
         if track?.free == "0" {
             guard let url = URL(string: "https://getbeat.ru/order") else { return }
             let svc = SFSafariViewController(url: url)
-            window?.rootViewController?.present(svc, animated: true, completion: nil)
+            UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(svc, animated: true, completion: nil)
         } else {
             if let urlString = track?.previewUrl, var filename = track?.realName {
                 if filename.contains("/") {
@@ -43,7 +43,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
 
                     if FileManager().fileExists(atPath: savedFileURL.path) {
                         DispatchQueue.main.async {
-                            self.window?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+                            UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
                         }
                     } else {
                         // запускаем эту историю после проверки, не скачан ли файл до этого
@@ -137,7 +137,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
             let activityViewController = UIActivityViewController(activityItems: [savedFileURL], applicationActivities: nil)
             try FileManager.default.moveItem(at: location, to: savedFileURL)
             DispatchQueue.main.async {
-                self.window?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+                UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
                 self.cellButton.alpha = 1
                 self.shapeLayer.removeFromSuperlayer()
                 self.trackLayer.removeFromSuperlayer()
