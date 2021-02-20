@@ -40,6 +40,8 @@
 		2172A5DB25BA1C29000AC98E /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5D825BA1C29000AC98E /* Roboto-Medium.ttf */; };
 		2172A5DC25BA1C29000AC98E /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5D925BA1C29000AC98E /* Roboto-Bold.ttf */; };
 		2172A5DD25BA1C29000AC98E /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2172A5DA25BA1C29000AC98E /* Roboto-Regular.ttf */; };
+		2175DE4525D5518C00075F6E /* ApplicationAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2175DE4425D5518C00075F6E /* ApplicationAuth.swift */; };
+		21C041AD25D2E87800E084DD /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C041AC25D2E87800E084DD /* WelcomeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		2172A5D825BA1C29000AC98E /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		2172A5D925BA1C29000AC98E /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		2172A5DA25BA1C29000AC98E /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		2175DE4425D5518C00075F6E /* ApplicationAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationAuth.swift; sourceTree = "<group>"; };
+		21C041AC25D2E87800E084DD /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +158,7 @@
 				2114887925865BC20065C0C6 /* FilterStateModel.swift */,
 				211C9989258A6A6E00962948 /* VKUser.swift */,
 				215945B325CAE5E6009281F7 /* ContextMenuModel.swift */,
+				2175DE4425D5518C00075F6E /* ApplicationAuth.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				21148841257FAB660065C0C6 /* MainViewController.swift */,
+				21C041AC25D2E87800E084DD /* WelcomeViewController.swift */,
 				215945BC25CC7E4C009281F7 /* PurchaseViewController.swift */,
 				2117F3BF25BC3BE700C5F637 /* ContextMenuViewController.swift */,
 				21148867258293520065C0C6 /* FilterViewController.swift */,
@@ -282,6 +288,7 @@
 				211488712582CF600065C0C6 /* Extensions.swift in Sources */,
 				215945C025CC7F1E009281F7 /* PurchaseCell.swift in Sources */,
 				211C998A258A6A6E00962948 /* VKUser.swift in Sources */,
+				21C041AD25D2E87800E084DD /* WelcomeViewController.swift in Sources */,
 				2114887525843CA00065C0C6 /* SomeData.swift in Sources */,
 				215945B425CAE5E6009281F7 /* ContextMenuModel.swift in Sources */,
 				211C99802587C55800962948 /* SearchViewController.swift in Sources */,
@@ -294,6 +301,7 @@
 				215B4C1C25C5CE4B006CD7CF /* HorizontalScrollCell.swift in Sources */,
 				2114883E257FAB660065C0C6 /* AppDelegate.swift in Sources */,
 				215945B825CC4C18009281F7 /* BuyTrack.swift in Sources */,
+				2175DE4525D5518C00075F6E /* ApplicationAuth.swift in Sources */,
 				21148840257FAB660065C0C6 /* SceneDelegate.swift in Sources */,
 				21148863257FFA8A0065C0C6 /* TrackCell.swift in Sources */,
 			);

@@ -203,7 +203,7 @@ class LoginViewController: UIViewController, VKLoginProtocol, UITextFieldDelegat
         activityIndicatorView.stopAnimating()
         if state {
             setupElements(state: true)
-            
+            ApplicationAuth.isAuth = true
             // в зависимости от типа логина - разные поля заполняются
             if isEmailLogin {
                 if let nickname = user.nickname, let firstname = user.firstName, let photoRecURL = user.photoRec {

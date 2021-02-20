@@ -115,6 +115,7 @@ class SearchViewController: UIViewController {
     }
 
     var tempIndexPath: IndexPath?
+    var isAnimatingStopped = false
     
 }
 
@@ -131,6 +132,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        isAnimatingStopped = false
         if tableViewBottom.constant == 0 {
             tableViewBottom.constant = 90
         }
@@ -147,9 +149,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
             }
 
         } else {
-            guard let durationInSeconds = filteredTracks[indexPath.row].durationInSeconds, !durationInSeconds.isNaN else {
+            guard let duration = filteredTracks[indexPath.row].duration else {
                 return
             }
+            
+            playingView.startAnimating()
 
             if let ob = self.playingTrackObserver {
                 player.removeTimeObserver(ob)
@@ -167,16 +171,18 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
             playingView.endTimeValueLabel.text = filteredTracks[indexPath.row].durationInString
             playingView.beginTimeValueLabel.text = "0:00"
 
-            //if let durationInSeconds = filteredTracks[indexPath.row].durationInSeconds {
-                playingView.durationSlider.maximumValue = Float(durationInSeconds)
+                playingView.durationSlider.maximumValue = Float(duration)
                 playingView.durationSlider.value = 0
 
                 playingTrackObserver = player.addProgressObserver(action: { (progress) in
-                    self.playingView.durationSlider.value = Float(progress * durationInSeconds)
+                    if progress > 0, !self.isAnimatingStopped {
+                        self.playingView.stopAnimating()
+                        self.isAnimatingStopped = true
+                    }
+                    self.playingView.durationSlider.value = Float(progress * duration)
                     self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
                 })
 
-            //}
             playingView.alpha = 1
 
             player.play()

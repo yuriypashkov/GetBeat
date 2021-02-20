@@ -81,7 +81,7 @@ class NetworkModel {
             }
             
             do {
-                let tracksResponse = try JSONDecoder().decode(TracksResponse.self, from: data)
+                let tracksResponse = try JSONDecoder().decode(TrackResponseForSearch.self, from: data)
                 onResult(.success(tracksResponse.tracks))
             }
             catch (let error) {

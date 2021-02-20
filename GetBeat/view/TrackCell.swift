@@ -17,7 +17,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
     @IBOutlet weak var trackImage: UIImageView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var authorNameLabel: UILabel!
-    @IBOutlet weak var testLabel: UILabel!
+    //@IBOutlet weak var testLabel: UILabel!
     @IBOutlet weak var cellButton: UIButton!
     
     // MARK: IB Methods
@@ -25,9 +25,16 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
         if track?.free == "0" {
             guard let url = URL(string: "https://getbeat.ru/order") else { return }
             let svc = SFSafariViewController(url: url)
-            window?.rootViewController?.present(svc, animated: true, completion: nil)
+            UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(svc, animated: true, completion: nil)
         } else {
-            if let urlString = track?.previewUrl, let filename = track?.realName {
+            if let urlString = track?.previewUrl, var filename = track?.realName {
+                if filename.contains("/") {
+                    for index in filename.indices {
+                        if filename[index] == "/" {
+                            filename.remove(at: index)
+                        }
+                    }
+                }
                 currentDownloadedFileName = filename
                 do {
                     let documentURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -36,7 +43,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
 
                     if FileManager().fileExists(atPath: savedFileURL.path) {
                         DispatchQueue.main.async {
-                            self.window?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+                            UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
                         }
                     } else {
                         // запускаем эту историю после проверки, не скачан ли файл до этого
@@ -81,13 +88,8 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
        // cellButton.alpha = 1
         // очень слабый момент парсинга имени автора и названия трека, могут быть косяки
         trackNameLabel.text = currentTrack.trackName
-        authorNameLabel.text = currentTrack.authorName + "- 0:00"
+        authorNameLabel.text = currentTrack.authorName + "- \(currentTrack.durationInString ?? "0:00")"
         track = currentTrack
-        
-//        DispatchQueue.main.async {
-//            print(currentTrack.durationInString ?? "0:00")
-//        }
-        
         
         cellButton.layer.cornerRadius = cellButton.bounds.width / 5
         cellButton.layer.masksToBounds = true
@@ -135,7 +137,7 @@ class TrackCell: UITableViewCell, URLSessionDownloadDelegate {
             let activityViewController = UIActivityViewController(activityItems: [savedFileURL], applicationActivities: nil)
             try FileManager.default.moveItem(at: location, to: savedFileURL)
             DispatchQueue.main.async {
-                self.window?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+                UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
                 self.cellButton.alpha = 1
                 self.shapeLayer.removeFromSuperlayer()
                 self.trackLayer.removeFromSuperlayer()

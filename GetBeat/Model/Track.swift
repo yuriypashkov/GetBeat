@@ -17,7 +17,7 @@ struct Track: Decodable {
     var realName: String?
     var free: String?
     var hook: String? // припев Да или Нет
-    var duration: String?
+    var duration: Double?
     var priceLicense: String?
     
     var authorName: String {
@@ -74,36 +74,19 @@ struct Track: Decodable {
     }
     
     
-    
     var durationInString: String? {
-        if let previewUrl = previewUrl {
-
-            guard let url = URL(string: previewUrl) else { return nil }
-            let asset = AVURLAsset(url: url, options: nil)
-            let audioDuration = asset.duration
-            let audioDurationSeconds = CMTimeGetSeconds(audioDuration)
-            let minutes = audioDurationSeconds / 60
-            let seconds = Int(audioDurationSeconds.rounded()) % 60
+        if let duration = duration {
+            let minutes = duration / 60
+            let seconds = Int(duration.rounded()) % 60
             if seconds < 10 {
                 return "\(Int(minutes.rounded(.down))):0\(seconds)"
             } else {
                 return "\(Int(minutes.rounded(.down))):\(seconds)"
             }
+        }
+        return nil
+    }
 
-        }
-        return nil
-    }
-    
-    var durationInSeconds: Double? {
-        if let previewUrl = previewUrl {
-            guard let url = URL(string: previewUrl) else { return nil }
-            let asset = AVURLAsset(url: url, options: nil)
-            let audioDuration = asset.duration
-            let audioDurationSeconds = CMTimeGetSeconds(audioDuration)
-            return audioDurationSeconds
-        }
-        return nil
-    }
     
 }
 
@@ -153,5 +136,14 @@ struct TracksResponse: Decodable {
         var container = try decoder.unkeyedContainer()
         tracks = try container.decode([Track].self)
         countModel = try container.decode(TracksCount.self)
+    }
+}
+
+struct TrackResponseForSearch: Decodable {
+    let tracks: [Track]
+    
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        tracks = try container.decode([Track].self)
     }
 }
