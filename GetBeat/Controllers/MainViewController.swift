@@ -17,15 +17,11 @@ class MainViewController: UIViewController, FilterDelegate {
     weak var hotTracksProtocolDelegate: HotTracksPageControllerDelegate?
     var customActivityIndicator = CustomActivityIndicator()
     
-    //background play music
-    let player = AVPlayer()
-    var playerItem: AVPlayerItem?
-    private var playingTrackObserver: Any?
+    var tabBar: CustomTabBarController?
+    //private var playingTrackObserver: Any?
     
     //array for query items
     var queryItems: [URLQueryItem] = []
-    
-    var playingView: PlayingView!
     
     // 2 запроса к бэку при старте приложения, поэтому такой выход для правильного выключения индикатора загрузки
     var indicatorCount = 0 {
@@ -46,14 +42,7 @@ class MainViewController: UIViewController, FilterDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideWelcomeViewController = defaults.bool(forKey: "hideWelcomeViewController")
-        //print(showWelcomeViewController)
-        if let tabBarHeight = tabBarController?.tabBar.frame.size.height, let window = UIApplication.shared.windows.first {
-            // playingView
-            let bottomInset = view.frame.size.height - tabBarHeight - window.safeAreaInsets.bottom - 75
-            playingView = PlayingView(position: CGPoint(x: 0, y: bottomInset), width: view.frame.size.width, height: 180)
-            view.addSubview(playingView)
-            playingView.alpha = 0
-        }
+        tabBar = tabBarController as? CustomTabBarController
         
         // load hot tracks
         loadHotTracks()
@@ -78,10 +67,6 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
-        navigationController?.navigationBar.isHidden = true
-        NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
-        
         // set indicator view
         customActivityIndicator.animate()
         view.addSubview(customActivityIndicator)
@@ -90,32 +75,6 @@ class MainViewController: UIViewController, FilterDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         customActivityIndicator.stopAnimate()
         customActivityIndicator.removeFromSuperview()
-    }
-    
-    private func methodForDisappear() {
-        if let ob = self.playingTrackObserver {
-            player.removeTimeObserver(ob)
-            playingTrackObserver = nil
-        }
-        
-        player.pause()
-        playingView.alpha = 0
-        playingView.setViewOnDefault()
-        
-        NotificationCenter.default.removeObserver(self)
-    
-    }
-    
-    // MARK: - AVPlayer Methods
-    
-    func preloadMusicData(urlString: String) {
-        let url = URL(string: urlString)
-        let playerItem = AVPlayerItem(url: url!)
-        player.replaceCurrentItem(with: playerItem)
-    }
-    
-    @objc func didFinishPlayTrack(sender: Notification) {
-        playingView.setViewOnDefault()
     }
     
     func setAlphaOnError(_ value: CGFloat) {
@@ -157,10 +116,8 @@ class MainViewController: UIViewController, FilterDelegate {
         networkModel.getTracks(queryItems: queryItems) { (result) in
             DispatchQueue.main.async {
                 switch result {
-                //case .success(let tempArray):
                 case .success(let tempTuple):
                     self.tracks = tempTuple.0
-                    //print(tempTuple.1)
                     self.reloadDataInAllTracksArray()
                 case .failure:
                     self.tracks = []
@@ -207,67 +164,35 @@ class MainViewController: UIViewController, FilterDelegate {
     
     // костыль для остановки текущего трека и воспроизведения следующего одним тапом
     var tempIndexPath: IndexPath?
-    var isAnimatingStoped = false
     
     func playTrack(indexPath: IndexPath) {
         // play music
         if tempIndexPath == indexPath {
             // если нажал на ту же самую ячейку
-            if player.timeControlStatus == .playing {
-                player.pause()
-                playingView.playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+            if tabBar?.player.timeControlStatus == .playing {
+                tabBar?.player.pause()
+                tabBar?.playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
             } else {
-                playingView.alpha = 1
-                player.play()
-                playingView.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+                //tabBar?.containerView.alpha = 1
+                tabBar?.player.play()
+                tabBar?.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
             }
 
         } else {
-            guard let duration = allTracksInTable[indexPath.section][indexPath.row].duration else {
-                print("NONE DURATION")
-                return
-            }
-            playingView.startAnimating()
+            tabBar?.containerView.alpha = 1
+            tabBar?.setPlayingView(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
+            tabBar?.startAnimating()
+
             // если нажал на новую ячейку
             // принудительно уберем подсветку ячейки
-            
             if let tempIndexPath = tempIndexPath {
                 let cell = tableView.cellForRow(at: tempIndexPath)
                 cell?.contentView.backgroundColor = .clear
             }
-            playingView.alpha = 1
 
-            preloadMusicData(urlString: allTracksInTable[indexPath.section][indexPath.row].previewUrl ?? "None")
-            //show playing view
-            playingView.player = player
-            playingView.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-            playingView.authorNameLabel.text = allTracksInTable[indexPath.section][indexPath.row].authorName
-            playingView.trackNameLabel.text = allTracksInTable[indexPath.section][indexPath.row].trackName
-            playingView.endTimeValueLabel.text = allTracksInTable[indexPath.section][indexPath.row].durationInString
-            playingView.beginTimeValueLabel.text = "0:00"
-
-            // наблюдатель для работы со слайдером прокрутки трека
-            if let pto = playingTrackObserver {
-                player.removeTimeObserver(pto)
-                playingTrackObserver = nil
-            }
-    
-            playingTrackObserver = player.addProgressObserver(action: { (progress) in
-                //print(state)
-                //print("\(progress) : \(state)")
-                if progress > 0, !self.isAnimatingStoped {
-                    self.playingView.stopAnimating()
-                    self.isAnimatingStoped = true
-                    print("STOPPED")
-                } // слабый момент, выполняется каждую секунду проигрывания
-                self.playingView.durationSlider.value = Float(progress * duration)
-                self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
-            })
-
-            playingView.durationSlider.maximumValue = Float(duration)
-            playingView.durationSlider.value = 0
-
-            player.play()
+            tabBar?.preloadMusicData(urlString: allTracksInTable[indexPath.section][indexPath.row].previewUrl ?? "None")
+            tabBar?.createDurationObserver(currentTrack: allTracksInTable[indexPath.section][indexPath.row])
+            tabBar?.player.play()
             tempIndexPath = indexPath
         }
     }
@@ -275,9 +200,6 @@ class MainViewController: UIViewController, FilterDelegate {
     // MARK: Filtering
     
     @IBAction func filterButtonTap(_ sender: UIButton) {
-        // пока так выключаем воспроизведение
-        methodForDisappear()
-        
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let filterViewController = storyboard.instantiateViewController(withIdentifier: "FilterViewController") as? FilterViewController {
             filterViewController.delegate = self
@@ -303,13 +225,13 @@ class MainViewController: UIViewController, FilterDelegate {
     }
     
     // MARK: - Search Button
-    @IBAction func searchButtonTap(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
-            searchViewController.modalPresentationStyle = .fullScreen
-            present(searchViewController, animated: true, completion: nil)
-        }
-    }
+//    @IBAction func searchButtonTap(_ sender: UIButton) {
+//        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+//        if let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController {
+//            searchViewController.modalPresentationStyle = .fullScreen
+//            present(searchViewController, animated: true, completion: nil)
+//        }
+//    }
     
     // MARK: - Reload Data
     @IBAction func reloadDataTap(_ sender: UIButton) {
@@ -327,7 +249,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
     // MARK: CollectionView methods
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        isAnimatingStoped = false
+        tabBar?.isAnimatingStoped = false
+        tabBar?.player.pause()
         playTrack(indexPath: indexPath)
     }
     
@@ -350,7 +273,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
             let index = Int(scrollView.contentOffset.x) / Int(scrollView.frame.width)
             hotTracksProtocolDelegate?.setCurrentPage(index: index)
             hotTrackIndex = index
-            //hotTracksProtocolDelegate?.setCurrentTrack(track: hotTracks[index])
         }
     }
     
@@ -413,7 +335,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource, UIColl
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // play music
-        isAnimatingStoped = false
+        tabBar?.isAnimatingStoped = false
         playTrack(indexPath: indexPath)
     }
     

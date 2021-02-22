@@ -14,23 +14,17 @@ class SearchViewController: UIViewController {
     let networkModel = NetworkModel()
     let searchCustomActivityIndicator = CustomActivityIndicator()
     
-    //attributes for playing music
-    var playingView: PlayingView!
-    let player = AVPlayer()
-    var playerItem: AVPlayerItem?
-    private var playingTrackObserver: Any?
+    var tabBar: CustomTabBarController?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
          return .lightContent
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
-        NotificationCenter.default.addObserver(self, selector: #selector(didFinishPlayTrack(sender:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
-        
         // activity indicator setup
         searchCustomActivityIndicator.animate()
         searchCustomActivityIndicator.alpha = 0
+        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2)
         view.addSubview(searchCustomActivityIndicator)
         
     }
@@ -40,39 +34,20 @@ class SearchViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
-        if let ob = self.playingTrackObserver {
-            player.removeTimeObserver(ob)
-            playingTrackObserver = nil
-        }
-
-        player.pause()
-        playingView.alpha = 0
-        playingView.setViewOnDefault()
-        
-        NotificationCenter.default.removeObserver(self)
-        
         searchCustomActivityIndicator.stopAnimate()
         searchCustomActivityIndicator.removeFromSuperview()
     }
-    
-    func preloadMusicData(urlString: String) {
-        let url = URL(string: urlString)
-        let playerItem = AVPlayerItem(url: url!)
-        player.replaceCurrentItem(with: playerItem)
-    }
-    
-    @objc func didFinishPlayTrack(sender: Notification) {
-        playingView.setViewOnDefault()
-    }
-    
-    
+
+
     @IBAction func cancelButtonTap(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
+        view.endEditing(true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // set tabBarController
+        tabBar = tabBarController as? CustomTabBarController
         
         //searchbar settings
         searchBar.delegate = self
@@ -80,15 +55,9 @@ class SearchViewController: UIViewController {
         tapGestureRecognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGestureRecognizer)
         
-        // playingView
-        playingView = PlayingView(position: CGPoint(x: 0, y: view.frame.size.height - 90), width: view.frame.size.width, height: 180)
-        view.addSubview(playingView)
-        playingView.alpha = 0
-        
     }
     
     func search(query: String) {
-        searchCustomActivityIndicator.center = CGPoint(x: view.frame.width / 2 - 70, y: view.frame.height / 2) // при каждом поиске размещаем по центру индикатор, дабы не было проблем при смене ориенитации телефона в пространстве
         tempIndexPath = nil // чтобы при повторном поиске не было косяков
         searchCustomActivityIndicator.alpha = 1
         networkModel.search(queryString: query) { (result) in
@@ -115,7 +84,6 @@ class SearchViewController: UIViewController {
     }
 
     var tempIndexPath: IndexPath?
-    var isAnimatingStopped = false
     
 }
 
@@ -132,60 +100,32 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        isAnimatingStopped = false
+        tabBar?.isAnimatingStoped = false
+        tabBar?.player.pause()
+        
         if tableViewBottom.constant == 0 {
             tableViewBottom.constant = 90
         }
         if tempIndexPath == indexPath {
 
             // если нажал на ту же самую ячейку
-            if player.timeControlStatus == .playing {
-                player.pause()
-                playingView.playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+            if tabBar?.player.timeControlStatus == .playing {
+                tabBar?.player.pause()
+                tabBar?.playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
             } else {
-                playingView.alpha = 1
-                player.play()
-                playingView.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+                //playingView.alpha = 1
+                tabBar?.player.play()
+                tabBar?.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
             }
 
         } else {
-            guard let duration = filteredTracks[indexPath.row].duration else {
-                return
-            }
-            
-            playingView.startAnimating()
-
-            if let ob = self.playingTrackObserver {
-                player.removeTimeObserver(ob)
-                playingTrackObserver = nil
-            }
-
             // если нажал на новую ячейку
-            preloadMusicData(urlString: filteredTracks[indexPath.row].previewUrl ?? "None")
-
-            //show playing view
-            playingView.player = player
-            playingView.playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-            playingView.authorNameLabel.text = filteredTracks[indexPath.row].authorName
-            playingView.trackNameLabel.text = filteredTracks[indexPath.row].trackName
-            playingView.endTimeValueLabel.text = filteredTracks[indexPath.row].durationInString
-            playingView.beginTimeValueLabel.text = "0:00"
-
-                playingView.durationSlider.maximumValue = Float(duration)
-                playingView.durationSlider.value = 0
-
-                playingTrackObserver = player.addProgressObserver(action: { (progress) in
-                    if progress > 0, !self.isAnimatingStopped {
-                        self.playingView.stopAnimating()
-                        self.isAnimatingStopped = true
-                    }
-                    self.playingView.durationSlider.value = Float(progress * duration)
-                    self.playingView.beginTimeValueLabel.text = self.playingView.durationSlider.value.floatToTime()
-                })
-
-            playingView.alpha = 1
-
-            player.play()
+            tabBar?.containerView.alpha = 1
+            tabBar?.setPlayingView(currentTrack: filteredTracks[indexPath.row])
+            tabBar?.startAnimating()
+            tabBar?.preloadMusicData(urlString: filteredTracks[indexPath.row].previewUrl ?? "None")
+            tabBar?.createDurationObserver(currentTrack: filteredTracks[indexPath.row])
+            tabBar?.player.play()
             tempIndexPath = indexPath
         }
     }
