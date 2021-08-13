@@ -218,7 +218,7 @@ class FilterViewController: UIViewController, PickerDelegate {
     
     // тап по кнопке Применить
     @IBAction func applyButtonTap(_ sender: UIButton) {
-        let filterDictionary = [
+        let filterDictionary: [String: String?] = [
             "emotions": moodValue, "ganre": genreValue, "key": keyValue,
             "newFirst": "\(newFirstSwitch.isOn)", "hook": "\(hookSwitch.isOn)",
             "energy": "\(Int(energySlider.value))", "temp": "\(Int(tempoSlider.value))",
@@ -241,7 +241,7 @@ class FilterViewController: UIViewController, PickerDelegate {
     func getTracksCount() {
         searchActivityIndicator.startAnimating()
         searchLabel.alpha = 0
-        let filterDictionary = [
+        let filterDictionary: [String: String?] = [
             "emotions": moodValue, "ganre": genreValue, "key": keyValue,
             "newFirst": "\(newFirstSwitch.isOn)", "hook": "\(hookSwitch.isOn)",
             "energy": "\(Int(energySlider.value))", "temp": "\(Int(tempoSlider.value))",
